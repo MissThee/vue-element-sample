@@ -38,11 +38,11 @@ export const constantRouterMap = [
       meta: {title: 'dashboard', icon: applicationIcon, noCache: true}
     },]
   },
-  // {path: '*', redirect: '/404', hidden: true},
+  {path: '*', redirect: '/404', hidden: true},
 ];
 
 export default new Router({
-  mode: 'history', //后端支持可开
+  // mode: 'history', //后端支持可开
   routes: constantRouterMap
 })
 

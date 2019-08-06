@@ -20,7 +20,7 @@ module.exports = {
     chainWebpack: config => {
         config.resolve.alias
         // key,value自行定义，比如.set('@assets', resolve('src/assets'))
-            .set('src', resolve('src'))
+            .set('src', resolve('./src'))
     },
 
     /*
@@ -30,7 +30,7 @@ module.exports = {
      新增配置，(该函数会在环境变量被设置之后懒执行)。该方法的第一个参数会收到已经解析好的配置。
      在函数内，你可以直接修改配置，或者返回一个将会被合并的对象。
    */
-    publicPath: "/",
+    publicPath: "./",
     //对象形式configureWebpack
     configureWebpack: {
         externals: {
@@ -59,13 +59,13 @@ module.exports = {
 
 
 /*
+* 【history模式尚无法找到nginx带前缀时如何正确匹配路由及资源，若使用history模式，暂只能使用根目录】
 * 打包配置
 * 使用Nginx时
 * Router中使用了history，
-* publicPath: "/",需设置为绝对路径。相对路径资源引用不正确，会从路由中，最后一个/前面（及当前组件的同级）开始找资源
 * Nginx配置，避免刷新404：
 
-        location / {
+        location /mypage/ { #访问url前缀
              alias   "H:\\WORKWORK_TEST\\nginxpage\\";#打包文件根目录
              try_files $uri $uri/ @router;#需要指向下面的@router否则会出现vue的路由在nginx中刷新出现404
              index  index.html index.htm;#默认页面
