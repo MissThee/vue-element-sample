@@ -5,11 +5,11 @@
     <breadcrumb class="breadcrumb-container"></breadcrumb>
 
     <div class="right-menu">
-      <el-tooltip effect="dark" content="全屏" placement="bottom">
+      <el-tooltip effect="dark" content="□" placement="bottom">
         <screenfull class="screenfull right-menu-item"></screenfull>
       </el-tooltip>
 
-      <el-dropdown trigger="click" class='international' @command="handleSetLanguage">
+      <el-dropdown trigger="click" class='international generateTitle' @command="handleSetLanguage">
         <div class="language-text">{{language}}</div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="zh" :disabled="language==='zh'">中文</el-dropdown-item>
@@ -138,7 +138,7 @@
         .international-icon {
           font-size: 20px;
           cursor: pointer;
-          vertical-align: -5px;
+        //  vertical-align: -5px;
         }
       }
 
