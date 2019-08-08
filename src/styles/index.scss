@@ -1,8 +1,7 @@
 @import './variables.scss';
 @import './mixin.scss';
 @import './sidebar.scss';
-@import './btn.scss';
-@import './mystyle.scss';
+
 
 body {
   //min-height: 600px;
@@ -85,7 +84,7 @@ div:focus {
   display: block;
 }
 
-.clearfix {
+.clearFix {
   &:after {
     visibility: hidden;
     display: block;
@@ -114,7 +113,6 @@ code {
 .warn-content {
   background: rgba(66, 185, 131, .1);
   border-radius: 2px;
-  padding: 16px;
   padding: 1rem;
   line-height: 1.6rem;
   word-spacing: .05rem;
@@ -123,50 +121,6 @@ code {
     font-weight: 600;
   }
 }
-
-//main-container全局样式
-.app-container {
-  padding: 20px;
-}
-
-.components-container {
-  margin: 30px 50px;
-  position: relative;
-}
-
-.pagination-container {
-  margin-top: 30px;
-}
-
-.editor-container .CodeMirror {
-  height: 100% !important;
-}
-
-.text-center {
-  text-align: center
-}
-
-.sub-navbar {
-  height: 50px;
-  line-height: 50px;
-  position: relative;
-  width: 100%;
-  text-align: right;
-  padding-right: 20px;
-  transition: 600ms ease position;
-  background: linear-gradient(90deg, rgba(32, 182, 249, 1) 0%, rgba(32, 182, 249, 1) 0%, rgba(33, 120, 241, 1) 100%, rgba(33, 120, 241, 1) 100%);
-  .subtitle {
-    font-size: 20px;
-    color: #fff;
-  }
-  &.draft {
-    background: #d0d0d0;
-  }
-  &.deleted {
-    background: #d0d0d0;
-  }
-}
-
 .link-type,
 .link-type:focus {
   color: #337ab7;
@@ -176,37 +130,11 @@ code {
   }
 }
 
-.filter-container {
-  padding-bottom: 10px;
-  .filter-item {
-    display: inline-block;
-    vertical-align: middle;
-    margin-bottom: 10px;
-  }
-}
-
-//refine vue-multiselect plugin
-.multiselect {
-  line-height: 16px;
-}
-
-.multiselect--active {
-  z-index: 1000 !important;
-}
-
 //table缩小高度
 .el-table td, .el-table th {
   padding: 0px;
 }
 
-//checkbox所有选项等距
-.el-checkbox + .el-checkbox {
-  margin-left: 10px;
-}
-
-.el-checkbox {
-  margin: 0 10px 0 10px;
-}
 
 //缩小表单间隔
 .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
@@ -220,14 +148,15 @@ code {
 
 //多行header样式,无需引用，覆盖<el-table>样式
 .el-table__header .caret-wrapper {
-  height: 5px;
-  width: 0px;
+  height: 20px;
   float: right;
 }
-
-.sort-caret {
-  //line-height: 0.5;
-  height: 11px;
+//修正表格header中排序箭头位置
+.caret-wrapper .ascending{
+  top:0 !important;
+}
+.caret-wrapper .descending{
+  top:12px !important;
 }
 
 //table表格头行高
@@ -244,7 +173,7 @@ code {
 
 .el-icon-caret-top {
   margin-top: -10px;
-  top: 0px;
+  top: 0;
   bottom: 0;
 }
 
@@ -291,4 +220,9 @@ code {
 //弹窗距离顶部距离
 .el-dialog{
   margin-top: 10vh !important;
+}
+//表格表头行高
+.grid-tool-bar{
+  height:30px;
+  margin:5px;
 }

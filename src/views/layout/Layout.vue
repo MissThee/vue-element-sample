@@ -48,11 +48,14 @@
   @import "src/styles/mixin.scss";
 
   .app-wrapper {
-    @include clearfix;
     position: relative;
     height: 100%;
     width: 100%;
   }
 
-
+  .app-wrapper:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
 </style>

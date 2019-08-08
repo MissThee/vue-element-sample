@@ -66,16 +66,11 @@
   }
 
   #box {
-    background-color: #f44856;
+    background-color: lightskyblue;
     color: white;
     overflow: hidden;
     height: 40px;
-    width: 850px;
     padding-left: 30px;
-    transition: all 0.5s;
-  }
-
-  .anim {
     transition: all 0.5s;
   }
 
