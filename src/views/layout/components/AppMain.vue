@@ -1,40 +1,58 @@
 <template>
-  <div class="app-main">
-<!--    <transition name="fade" mode="out-in">-->
-      <keep-alive :include="cachedViews">
-        <router-view></router-view>
-      </keep-alive>
-<!--    </transition>-->
-  </div>
+    <div ref="AppMain" :class="{'app-main':true,'no-scroll':isNoScroll}">
+        <transition v-on:leave="leave" v-on: name="fade" mode="out-in">
+            <keep-alive :include="cachedViews">
+                <router-view></router-view>
+            </keep-alive>
+        </transition>
+    </div>
 </template>
 
 <script>
-  export default {
-    name: 'AppMain',
-    computed: {
-      cachedViews() {
-        return this.$store.state.app.cachedViews
-      }
+    export default {
+        name: 'AppMain',
+        data() {
+            return {
+                isNoScroll: false
+            }
+        },
+        computed: {
+            cachedViews() {
+                return this.$store.state.app.cachedViews
+            }
+        }, methods: {
+            leave() {
+                this.isNoScroll = true;
+            }
+        }
     }
-  }
 </script>
 <style scoped>
-  .app-main {
-    height: 100%;
-  }
+    .app-main {
+        height: 100%;
+    }
 
-  .fade-enter-active {
-    transition: .2s linear;
-  }
+    .no-scroll {
+        overflow: hidden;
+    }
 
-  .fade-leave-active {
-    transition: .2s linear;
-  }
+    /*切换效果fade-xxx*/
+    .fade-enter {
+        opacity: 0;
+        transform: translateX(10px);
+    }
 
-  .fade-enter, .fade-leave-to {
-    margin-left: 20px;
-    /*-webkit-transform-style:preserve-3d;*/
-    /*-webkit-backface-visibility:hidden;*/
-    /*margin-left: 20px;*/
-  }
+    .fade-enter-active {
+        transition: all .2s;
+    }
+
+    .fade-leave-active {
+        transition: all .2s;
+    }
+
+    .fade-leave-active {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+
 </style>

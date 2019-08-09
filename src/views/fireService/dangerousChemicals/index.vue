@@ -106,7 +106,7 @@
                         <template slot-scope="scope">
                             <el-button size="mini" type="text" @click="handleUpdate(scope.row)" plain><i class="el-icon-edit "></i>编辑
                             </el-button>
-                            <el-button size="mini" type="text" style="color:red;" @click="handelDelete(scope.row.id,scope.row.name )" plain><i class="el-icon-circle-close-outline "></i>删除
+                            <el-button size="mini" type="text" style="color:red;" @click="handelDelete(scope.row.id,scope.row.name )" plain><i class="el-icon-remove "></i>删除
                             </el-button>
                         </template>
                     </el-table-column>

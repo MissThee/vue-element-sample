@@ -1,6 +1,6 @@
 <template>
   <scroll-bar>
-    <el-menu mode="vertical" :default-active="$route.path" :collapse="isCollapse" background-color="#304156" text-color="#fff" active-text-color="#409EFF">
+    <el-menu mode="vertical" class="el-menu-vertical-demo" :default-active="$route.path" :collapse="isCollapse" background-color="#304156" text-color="#fff" active-text-color="#409EFF">
       <sidebar-item :routes="permission_routers"></sidebar-item>
     </el-menu>
   </scroll-bar>
@@ -24,3 +24,12 @@ export default {
   }
 }
 </script>
+<style scoped>
+ /deep/ .el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 180px;
+  }
+ /deep/ .el-menu--collapse{
+    width:40px;
+  }
+
+</style>

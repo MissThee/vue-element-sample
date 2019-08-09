@@ -1,66 +1,66 @@
 <template>
-  <div class="animate" style="overflow: hidden;height: 100%;">
-    <el-row>
-      <el-col :span="12">
-        <el-table :data="roleTableData" @row-click="handleRowClick" :height="clientHeight" stripe
-                  :default-sort="{prop: 'name', order: 'ascending'}" border style="width: 100%;height:100%">
-          <el-table-column type="index" label="序号" width="50"></el-table-column>
-          <el-table-column prop="name" label="角色名" sortable></el-table-column>
-          <el-table-column prop="note" label="备注" sortable></el-table-column>
-          <el-table-column prop="status" label="状态" width="80px" align="center" sortable>
-            <template slot-scope="scope">
-              <div slot="reference" class="name-wrapper">
-                <el-tag :type="scope.row.status ==='正常'?'success':'danger'" size="mini">{{ scope.row.status }}</el-tag>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column fixed="right" label="操作" width="53">
-            <template slot-scope="scope">
-              <el-button size="mini" type="text" style="color:red;" @click="handelDelete(scope.row.id,scope.row.name)"
-                         plain><i class="el-icon-circle-close-outline "></i>删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-col>
-      <el-col :span="12">
-        <el-card class="box-card el-card__body">
-          <el-form :rules="formRules" ref="formData" size="mini" :model="form" label-width="80px">
-            <el-form-item label="角色名">
-              <el-input v-model="form.name"></el-input>
-            </el-form-item>
-            <el-form-item label="权限分配"></el-form-item>
-            <el-form-item label-width="30px">
-              <el-checkbox-group v-model="form.checkedPages">
-                <div class="page-border" v-for="page in pages">
-                  <el-checkbox v-for="select in page " :key="select.value" :label="select.value">{{select.text}}
-                  </el-checkbox>
-                </div>
-              </el-checkbox-group>
-            </el-form-item>
-            <el-form-item label="备注" prop="note">
-              <el-input v-model="form.note"></el-input>
-            </el-form-item>
-            <el-form-item label="状态">
-              <el-switch
-                v-model="form.status"
-                active-color="#33cc66"
-                inactive-color="#ff6666"
-                active-text="正常"
-                inactive-text="停用"
-                active-value="正常"
-                inactive-value="停用">
-              </el-switch>
-            </el-form-item>
-            <el-form-item label-width="50px">
-              <el-button size="mini" type="primary" @click="handleCreate()">新建角色</el-button>
-              <el-button type="primary" @click="handleSave()">保存</el-button>
-            </el-form-item>
-          </el-form>
-        </el-card>
-      </el-col>
-    </el-row>
-  </div>
+    <div class="animate" style="overflow: hidden;height: 100%;">
+        <el-row>
+            <el-col :span="12">
+                <el-table :data="roleTableData" @row-click="handleRowClick" :height="clientHeight" stripe
+                          :default-sort="{prop: 'name', order: 'ascending'}" border >
+                    <el-table-column key="index" type="index" label="序号" width="50"></el-table-column>
+                    <el-table-column key="name" prop="name" label="角色名" sortable></el-table-column>
+                    <el-table-column key="note" prop="note" label="备注" sortable></el-table-column>
+                    <el-table-column key="status" prop="status" label="状态" width="80px" align="center" sortable>
+                        <template slot-scope="scope">
+                            <div slot="reference" class="name-wrapper">
+                                <el-tag :type="scope.row.status ==='正常'?'success':'danger'" size="mini">{{ scope.row.status }}</el-tag>
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column key="operation" fixed="right" label="操作" align="center" width="53">
+                        <template slot-scope="scope">
+                            <el-button size="mini" type="text" style="color:red;" @click="handelDelete(scope.row.id,scope.row.name)" plain>
+                                <i class="el-icon-remove"></i>删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-col>
+            <el-col :span="12">
+                <el-card class="box-card el-card__body">
+                    <el-form :rules="formRules" ref="formData" size="mini" :model="form" label-width="80px">
+                        <el-form-item label="角色名">
+                            <el-input v-model="form.name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="权限分配"></el-form-item>
+                        <el-form-item label-width="30px">
+                            <el-checkbox-group v-model="form.checkedPages">
+                                <div class="page-border" v-for="page in pages">
+                                    <el-checkbox v-for="select in page " :key="select.value" :label="select.value">{{select.text}}
+                                    </el-checkbox>
+                                </div>
+                            </el-checkbox-group>
+                        </el-form-item>
+                        <el-form-item label="备注" prop="note">
+                            <el-input v-model="form.note"></el-input>
+                        </el-form-item>
+                        <el-form-item label="状态">
+                            <el-switch
+                                    v-model="form.status"
+                                    active-color="#33cc66"
+                                    inactive-color="#ff6666"
+                                    active-text="正常"
+                                    inactive-text="停用"
+                                    active-value="正常"
+                                    inactive-value="停用">
+                            </el-switch>
+                        </el-form-item>
+                        <el-form-item label-width="50px">
+                            <el-button size="mini" type="primary" @click="handleCreate()">新建角色</el-button>
+                            <el-button type="primary" @click="handleSave()">保存</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-card>
+            </el-col>
+        </el-row>
+    </div>
 </template>
 
 <script>
@@ -128,10 +128,10 @@
         mounted() {
             this.fetchData()
             this.$nextTick(function () {
-                this.clientHeight = `${document.documentElement.clientHeight}` - 90;
+                this.clientHeight = `${document.documentElement.clientHeight}` - 80;
                 const that = this;
                 window.onresize = function temp() {
-                    that.clientHeight = `${document.documentElement.clientHeight}` - 90;
+                    that.clientHeight = `${document.documentElement.clientHeight}` - 80;
                 };
                 this.getRouterInfo();
             })
@@ -216,23 +216,23 @@
     }
 </script>
 <style scoped>
-  .box-card {
-    padding: 10px;
-    margin: auto;
-    width: 95%;
-    border: 1px solid #e6ebf5;
-  }
+    .box-card {
+        padding: 10px;
+        margin: auto;
+        width: 95%;
+        border: 1px solid #e6ebf5;
+    }
 
-  .el-card__body {
-    padding-left: 0px;
-  }
+    .el-card__body {
+        padding-left: 0;
+    }
 
-  .page-border {
-    border-top: 1px solid #ccc;
-    border-collapse: collapse;
-  }
+    .page-border {
+        border-top: 1px solid #ccc;
+        border-collapse: collapse;
+    }
 
-  .page-border:first-child {
-    border-top: none;
-  }
+    .page-border:first-child {
+        border-top: none;
+    }
 </style>

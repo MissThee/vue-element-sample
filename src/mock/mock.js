@@ -805,7 +805,7 @@ Mock.mock('/user/table', 'post', options => {
         "name": "重点单位管理",
         "id": 2,
         "status": "正常"
-      }, {"name": "知识库管理、通讯录", "id": 3, "status": "正常"}, {"name": "部门管理", "id": 8, "status": "正常"}, {
+      }, {"name": "知识库管理", "id": 3, "status": "正常"}, {"name": "部门管理", "id": 8, "status": "正常"}, {
         "name": "用户管理1",
         "id": 10,
         "status": "正常"
@@ -834,7 +834,7 @@ Mock.mock('/user/table', 'post', options => {
         "name": "重点单位管理",
         "id": 2,
         "status": "正常"
-      }, {"name": "知识库管理、通讯录", "id": 3, "status": "正常"}, {"name": "角色管理", "id": 5, "status": "停用"}, {
+      }, {"name": "知识库管理", "id": 3, "status": "正常"}, {"name": "角色管理", "id": 5, "status": "停用"}, {
         "name": "部门管理",
         "id": 8,
         "status": "正常"
@@ -882,7 +882,7 @@ Mock.mock('/user/roles', 'post', options => {
     "roles": [{"text": "", "value": 17}, {"text": "岗位管理", "value": 1}, {
       "text": "战斗员",
       "value": 15
-    }, {"text": "用户管理1", "value": 10}, {"text": "知识库管理、通讯录", "value": 3}, {"text": "角色管理", "value": 5}, {
+    }, {"text": "用户管理1", "value": 10}, {"text": "知识库管理", "value": 3}, {"text": "角色管理", "value": 5}, {
       "text": "部门管理",
       "value": 8
     }, {"text": "重点单位管理", "value": 2}]
@@ -994,7 +994,7 @@ Mock.mock('/role/table', 'post', options => {
     "roleTable": [
       {"note": "备注", "name": "岗位管理", "id": 1, "isDel": false, "status": "正常"},
       {"note": "无", "name": "重点单位管理", "id": 2, "isDel": false, "status": "正常"},
-      {"note": "无", "name": "知识库管理、通讯录", "id": 3, "isDel": false, "status": "正常"},
+      {"note": "无", "name": "知识库管理", "id": 3, "isDel": false, "status": "正常"},
       {"note": "无", "name": "角色管理", "id": 5, "isDel": false, "status": "停用"},
       {"note": "无", "name": "部门管理", "id": 8, "isDel": false, "status": "正常"},
       {"note": "无", "name": "用户管理1", "id": 10, "isDel": false, "status": "正常"},
