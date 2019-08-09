@@ -45,7 +45,6 @@
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  @import "src/styles/mixin.scss";
 
   .app-wrapper {
     position: relative;
