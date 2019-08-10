@@ -1,16 +1,16 @@
 <template>
     <div class="login-container">
         <el-row type="flex" justify="center" class="login-el-row">
-            <el-col :span="24">
+            <el-col class="el-col-width">
                 <div class="content-top">
                     <header>sample</header>
                 </div>
             </el-col>
         </el-row>
         <el-row type="flex" justify="center" class="login-el-row">
-            <el-col :span="19">
+            <el-col class="el-col-width">
                 <section>
-                    <el-carousel trigger="click" height="350" class="login-section">
+                    <el-carousel trigger="click" class="login-section">
                         <el-carousel-item v-for="item in imageData" :key="item.id">
                             <img :src="item.path" height="350" alt=""/>
                         </el-carousel-item>
@@ -21,22 +21,28 @@
                         <div slot="header">
                             <b>登录</b>
                         </div>
-                        <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
+                        <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm"
+                                 label-position="left">
                             <el-form-item prop="loginId">
-                                <el-input name="loginId" type="text" v-model="loginForm.loginId" autoComplete="on" placeholder="账号"/>
+                                <el-input name="loginId" type="text" v-model="loginForm.loginId" autoComplete="on"
+                                          placeholder="账号"/>
                             </el-form-item>
                             <el-form-item prop="password">
-                                <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="密码"/>
-                                <span class="show-pwd" @mousedown="showPwd" @mouseup="hidePwd"><i class="el-icon-view"></i></span>
+                                <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin"
+                                          v-model="loginForm.password" autoComplete="on" placeholder="密码"/>
+                                <span class="show-pwd" @mousedown="showPwd" @mouseup="hidePwd"><i
+                                        class="el-icon-view"></i></span>
                             </el-form-item>
-                            <el-button type="primary" class="login-button" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
+                            <el-button type="primary" class="login-button" :loading="loading"
+                                       @click.native.prevent="handleLogin">登录
+                            </el-button>
                         </el-form>
                     </el-card>
                 </aside>
             </el-col>
         </el-row>
         <el-row type="flex" justify="center" class="login-bottom-scroll login-el-row">
-            <el-col :span="19">
+            <el-col class="el-col-width">
                 <footer>
                     <div class="scroll-content">通知</div>
                     <scroll-text-vertical :items="newsData" text="content"></scroll-text-vertical>
@@ -87,7 +93,7 @@
             }
         },
         mounted() {
-            document.onmouseup=this.hidePwd;//全局监听mouseup事件
+            document.onmouseup = this.hidePwd;//全局监听mouseup事件
             this.fetchInfo();
             this.loginForm.loginId = this.getCookie('loginId');
         },
@@ -133,13 +139,17 @@
 </script>
 
 <style scoped>
+    .el-col-width {
+        width: 870px
+    }
 
     .login-section {
-        width: 630px;
+        width: 525px;
         float: left
     }
 
     .login-aside {
+        margin: 10px 0;
         width: 330px;
         float: right
     }
