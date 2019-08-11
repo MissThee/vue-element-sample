@@ -15,7 +15,7 @@ const user = {
   },
 
   mutations: {
-    SET_ID: (state, id) => {
+    SET_ID :(state, id) => {
       state.id = id
     },
     SET_NAME: (state, name) => {

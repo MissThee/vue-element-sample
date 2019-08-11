@@ -1,4 +1,5 @@
 import Mock from 'mockjs';
+import {getNodesInTree} from "src/utils/tools";
 
 // 如果是get请求，可以在options.url中获取到，
 // 如果是post请求，可以在options.body中获取到。
@@ -7,997 +8,1023 @@ import Mock from 'mockjs';
 // })
 // Mock.mock( url, post/get , 返回的数据)；
 Mock.mock('/login/login', 'post',
-  {
-    "result": true,
-    "message": "登录成功",
-    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNTY1NzY3MTExfQ.KLONV2or75Z3h81gve60mBPPzEteMhywqgadGPO_j_U"
-  }
+    {
+        "result": true,
+        "message": "登录成功",
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNTY1NzY3MTExfQ.KLONV2or75Z3h81gve60mBPPzEteMhywqgadGPO_j_U"
+    }
 );
 Mock.mock('/index/getUserInfo', 'post',
-  {
-    "user": {
-      "pages": [101, 102, 103, 104, 201, 202],
-      "roles": [1, 2, 3, 8, 10],
-      "companyName": "测试单位",
-      "name": "管理员",
-      "company": 1,
-      "id": 1,
-      "isAdmin": 1,
-      "avatar": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoBAMAAAB+0KVeAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAeUExURRUTEOjf3z44McrHxqumpIR/el9dVeawsct7gZxBR/0nTU4AAAJcSURBVCjPJZNBj5swEIWfrASpRwuq7NFyF5Te6jVpr7uxYa8EMO0xmw2o16hbmd6qHgrc9hj+bYetJcTw+XnmaRhDa54+c8W5rfmyHjjX0FrlS6D3SU1bofkPo8ryXcwLsKQKTah4CKUzFdnjim9qkyZOcb3AqOKR3B/eEn4TBx4pgpnie3fh3m8890WguAmxCJsL34zDNF42N3imWsiV/jIQ8n55eBlwbtCqR3/ph40fp2Gch5/FU6Sxax82m7kfJ8m2/Xy9FGvLETq/6a/EAHbtR78rDxyR957gK2ht+37w7wmm/TD6oR8Fw+1AJkavObLBj+SRl1J+pTfBF4X+0k8zmfkjtyMFIy2NRz/NH2ey3tV/MV+naR5/wN68Moh342gLYN7Ok5wN1C8wAXx/UQQlkxKsxcNvJF0nIM9hQ0Hb0RZMwVrnThRa1zlXZ4IlqIqgtq6hU51sa2szgYCUBK1tKLOM0zcooe8Dm9o0kwJsbawmWCP9FNSp0VlMFpJa6wwwSO9YbbTOEzrWudqWYAouZ7Sf5lIELuvqkuooZI61Wuvlw6WlJMexoiajNTo9slZ2Jm8agbMCz0VgTX4Cy5nZOSdQcfC9QNK6BqjFbWpz4InDuBJB7dwRrYytPSKoQgSHz0DsrABloB6IQ7gHDhEVbjJ8oDxAkKiIAavwJJaW3nZCJie54vcx9njIkUjESZuckhOeIlRIxSoSq7JrE9eKQMTqfq2gSVqsy0SQGhDP0eJTp2JdBNR5Sk8DfiZhSDO/h2PLJNEfs+c7VOFyEUh6JN/ueKYpXoT6H/Y7su0FIfOAAAAAAElFTkSuQmCC",
+    {
+        "user": {
+            "pages": [101, 102, 103, 104, 201, 202],
+            "roles": [1, 2, 3, 8, 10],
+            "companyName": "测试单位",
+            "name": "管理员",
+            "company": 1,
+            "id": 1,
+            "isAdmin": 1,
+            "avatar": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoBAMAAAB+0KVeAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAeUExURRUTEOjf3z44McrHxqumpIR/el9dVeawsct7gZxBR/0nTU4AAAJcSURBVCjPJZNBj5swEIWfrASpRwuq7NFyF5Te6jVpr7uxYa8EMO0xmw2o16hbmd6qHgrc9hj+bYetJcTw+XnmaRhDa54+c8W5rfmyHjjX0FrlS6D3SU1bofkPo8ryXcwLsKQKTah4CKUzFdnjim9qkyZOcb3AqOKR3B/eEn4TBx4pgpnie3fh3m8890WguAmxCJsL34zDNF42N3imWsiV/jIQ8n55eBlwbtCqR3/ph40fp2Gch5/FU6Sxax82m7kfJ8m2/Xy9FGvLETq/6a/EAHbtR78rDxyR957gK2ht+37w7wmm/TD6oR8Fw+1AJkavObLBj+SRl1J+pTfBF4X+0k8zmfkjtyMFIy2NRz/NH2ey3tV/MV+naR5/wN68Moh342gLYN7Ok5wN1C8wAXx/UQQlkxKsxcNvJF0nIM9hQ0Hb0RZMwVrnThRa1zlXZ4IlqIqgtq6hU51sa2szgYCUBK1tKLOM0zcooe8Dm9o0kwJsbawmWCP9FNSp0VlMFpJa6wwwSO9YbbTOEzrWudqWYAouZ7Sf5lIELuvqkuooZI61Wuvlw6WlJMexoiajNTo9slZ2Jm8agbMCz0VgTX4Cy5nZOSdQcfC9QNK6BqjFbWpz4InDuBJB7dwRrYytPSKoQgSHz0DsrABloB6IQ7gHDhEVbjJ8oDxAkKiIAavwJJaW3nZCJie54vcx9njIkUjESZuckhOeIlRIxSoSq7JrE9eKQMTqfq2gSVqsy0SQGhDP0eJTp2JdBNR5Sk8DfiZhSDO/h2PLJNEfs+c7VOFyEUh6JN/ueKYpXoT6H/Y7su0FIfOAAAAAAElFTkSuQmCC",
+        }
     }
-  }
 );
 
 Mock.mock('/login/info', 'post',
-  {
-    "imageTable": ["1", "2", "3", "4"],
-    "newsTable": [{"title": "title1", "content": "content123123"}, {"title": "title2", "content": "content234234"}]
-  }
+    {
+        "imageTable": ["1", "2", "3", "4"],
+        "newsTable": [{"title": "title1", "content": "content123123"}, {"title": "title2", "content": "content234234"}]
+    }
 );
 
 let importantCompany_table_info = [];
 
 function importantCompany_table(pageNumber, pageSize, name) {
-  if (importantCompany_table_info.length === 0) {
-    for (let i = 0; i < 130; i++) {
-      importantCompany_table_info.push(
-        {
-          "area": "地区" + (i % 3) + "(影响颜色)",
-          "fireForceDetail": "这里是详情",
-          "importantCompany": "名称" + i,
-          "address": "这里是地址",
-          "responsePerson": "负责人" + i,
-          "level": "一级",
-          "coordinateType": "wgs84",
-          "protectedRange": "负责范围" + i,
-          "contactInformation": "",
-          "type": "1",
-          "id": i,
-          "lat": 28 + Math.random() * 20,
-          "lng": 86 + Math.random() * 30,
+    if (importantCompany_table_info.length === 0) {
+        for (let i = 0; i < 130; i++) {
+            importantCompany_table_info.push(
+                {
+                    "area": "地区" + (i % 3) + "(影响颜色)",
+                    "fireForceDetail": "这里是详情",
+                    "importantCompany": "名称" + i,
+                    "address": "这里是地址",
+                    "responsePerson": "负责人" + i,
+                    "level": "一级",
+                    "coordinateType": "wgs84",
+                    "protectedRange": "负责范围" + i,
+                    "contactInformation": "",
+                    "type": "1",
+                    "id": i,
+                    "lat": 28 + Math.random() * 20,
+                    "lng": 86 + Math.random() * 30,
+                }
+            );
         }
-      );
     }
-  }
-  let list = importantCompany_table_info;
-  if (name !== undefined && name !== "") {
-    list = list.filter(item => {
-      return item.importantCompany.indexOf(name) !== -1;
-    });
-  }
-  let total = list.length;
-  list = list.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
-  return {"totalRow": total, "importantCompanyTable": list}
+    let list = importantCompany_table_info;
+    if (name !== undefined && name !== "") {
+        list = list.filter(item => {
+            return item.importantCompany.indexOf(name) !== -1;
+        });
+    }
+    let total = list.length;
+    list = list.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+    return {"totalRow": total, "importantCompanyTable": list}
 }
 
 Mock.mock('/importantCompany/table', 'post', options => {
-    let body = JSON.parse(options.body);
-    return importantCompany_table(body.pageNumber, body.pageSize, body.keyWords.name)
-  }
+        let body = JSON.parse(options.body);
+        return importantCompany_table(body.pageNumber, body.pageSize, body.keyWords.name)
+    }
 );
 
 Mock.mock('/importantCompany/importantCompany', 'post', options => {
-  let body = JSON.parse(options.body);
-  let res = importantCompany_table_info.filter(item => {
-    return item.id === body.id
-  })[0];
-  return {"importantCompany": res}
+    let body = JSON.parse(options.body);
+    let res = importantCompany_table_info.filter(item => {
+        return item.id === body.id
+    })[0];
+    return {"importantCompany": res}
 });
 
 let dangerousChemicals_table_info = [
-  {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：脱去污染的衣着，用清水彻底冲洗皮肤\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗\n·吸入：迅速脱离现场至空气新鲜处：就医\n·食入：饮足量温水，催吐。就医",
-    "specialWarning": "★易燃，其蒸气与空气混合.能形成爆炸性混合物",
-    "dangerBody": "·IDLH:3300ppm[LEL]\n·经消化道和呼吸道吸收，作用于中枢神经系统\n·急性中毒主要见于过量饮酒者，重度中毒可出现昏迷、呼吸衰竭.并可因呼吸麻痹或循环衰竭而死亡\n·吸入高浓度蒸气出现酒醉感、头昏、乏力、兴奋、上呼吸道黏膜刺激症状",
-    "purpose": "是重要的化工原料，广泛用于有机合成、医药、农药等行业。也是重要的溶剂和杀菌、消毒剂。也可作为乙醇汽油组分或添加剂。",
-    "dangerEnvironmental": "·水体中浓度较高时，对水生生物有害\n·易被生物降解",
-    "typeName": "华北油区常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少100m.下风向疏散至少500m。发生大规模泄漏时，初始隔离至少500m.下风向疏散至少1000m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离800m。\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处",
-    "type": 1,
-    "dangerCombustionExplosion": "·蒸气比空气重，能在较低处扩散到相当远的地方，遇火回燃\n·在火场中，受热的容器有爆炸危险",
-    "lastEditUserId": 1,
-    "lastEditUserName": "admin",
-    "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水、抗溶性泡沫、蒸汽。\n·在确保安全的前提下，将容器移离火场\n储罐、公路、铁路、槽车火灾\n·不可能远距离灭火或使用车载炮或移动水炮灭火\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象，立即撤离\n·切勿在储罐两端停留",
-    "characteristic": "·无色透明液体，有酒香和刺激性辛辣味。与水混溶\n·沸点：78.3℃\n·相对密度：0.789\n·闪点：13℃\n·爆炸极限：3.3％～19.0％\n·饱和蒸汽压：5.33kPa（19℃）\n·临界温度：243.1℃",
-    "uploadUser": 1,
-    "path": "",
-    "uploadDate": "2018-05-15 08:28:39",
-    "chemicalFormula": "C2H6O",
-    "name": "乙醇",
-    "id": 1,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿隔热服或灭火防护服",
-    "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·作业时所有设备应接地\n·构筑围堤或挖沟槽收容泄漏物，防止进人水体、下水道、地下室或限制性空间\n·用抗溶性泡沫覆盖泄漏物，减少挥发\n·用雾状水溶解稀释挥发的蒸气\n·用砂土或其他不燃材料吸收泄漏物\n·如果储罐发生泄漏，可通过倒罐转移尚未泄漏的液体",
-    "createDate": "2018-05-01 08:28:29"
-  }, {
-    "fileName": "柴油.xls",
-    "emergencyFirstAid": "·皮肤接触：脱去受污染的衣服，用清水彻底冲洗皮肤。就医\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难.给输氧。呼吸心跳停止，立即进行心肺复苏术。就医\n·食入：催吐。2％碳酸氢钠洗胃，硫酸镁导泻。就医\n·解毒剂：口服乙醇或静脉输乙醇、碳酸氢钠、叶酸、4-甲基吡唑\n",
-    "specialWarning": " ★易燃，其蒸气与空气混合，能形成爆炸性混合物",
-    "dangerBody": "具有刺激作用。皮肤接触柴油可引起接触性皮炎，油性痤疮，吸入可引起吸入性肺炎。柴油废气可引起眼、鼻刺激症状、头晕及头痛",
-    "purpose": "用作柴油机的燃料",
-    "dangerEnvironmental": "水体中浓度较高时，对水生生物有害",
-    "typeName": "华北油区常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少100m，下风向疏散至少500m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。",
-    "type": 1,
-    "dangerCombustionExplosion": "易挥发，易爆炸，蒸气比空气重，在低洼处聚焦，遇火回燃。",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：雾状水、泡沫。\n·用大量水冷却容器，直至火灾扑灭\n·备足泡沫，一次性灭火。灭火后持续冷却。\n·筑堤收容消防污水以备处理，不得随意排放。\n·容器突然发出异常声音或发生异常现象，立即撤离。\n",
-    "characteristic": "·稍有粘性的浅黄至棕色液体，不溶于水\n·沸点：282℃～382℃\n·相对密度：0.87～0.9\n·闪点：38℃～54℃\n·爆炸极限：5.3％～32％\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": null,
-    "name": "柴油",
-    "id": 2,
-    "individualProtection": "佩戴正压式空气呼吸器，穿防静电服，着火时穿隔热服或灭火防护服\n",
-    "emergencyLeakage": "·消除点火源，疏散警戒\n·采取关阀、倒罐、堵漏的工艺措施\n·筑堤、挖沟收容泄漏物，防止进入水体、下水道或雨排系统\n·泡沫覆盖，减少挥发\n·少量泄漏用砂土或其他不燃材料吸收泄漏物\n",
-    "createDate": "2018-08-30 11:01:44"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：立即脱去污染的衣着，用清水彻底冲洗皮肤。就医\n·眼睛接触：立即提起眼睑，用大量流动清水彻底冲洗10～15min。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医。\n·食入：饮水，禁止催吐。就医。",
-    "specialWarning": "★高度易燃，其蒸气与空气混合，能形成爆炸性混合物\n★注意：闪点很低，用水灭火无效\n★不得使用直流水扑救\n",
-    "dangerBody": "·麻醉性毒物\n·高浓度吸入汽油蒸气引起急性中毒，表现为中毒性脑病，出现精神症状、意识障碍。极高浓度吸入引起意识突然丧失、反射性呼吸停止。误将汽油吸入呼吸道可引起吸入性肺炎\n·皮肤较长时间接触引起灼伤，个别发生急性皮炎\n·慢性中毒可引起周围神经病、中毒性脑病、肾脏损害。可致皮肤损害",
-    "purpose": "主要用作汽油机的燃料，溶剂汽油则用于橡胶、油漆、油脂、香料等工业。",
-    "dangerEnvironmental": "·在很低的浓度下就能对水生生物造成危害\n·在土壤中具有极强的迁移性\n·具有一定的生物富集性\n·在低浓度时能生物降解；在高浓度时，可使微生物中毒，不易被生物降解\n",
-    "typeName": "华北油区常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少50m，下风向疏散至少300m。发生大量泄漏时，初始隔离至少500m，下风向疏散至少1000m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离800m。\n考虑撤离隔离区内的人员、物资\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处\n·进入密闭空间之前必须先通风",
-    "type": 1,
-    "dangerCombustionExplosion": "·蒸气比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n·高度易燃，蒸气与空气混合可形成爆炸性混合物，遇明火、高热\n·流速过快，容易产生和积聚静电\n·在火场中，受热的容器有爆炸危险\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "注意：闪点很低，用水灭火无效。\n  灭火剂：干粉、二氧化碳、泡沫。\n·不得使用直流水扑救\n·在确保安全的前提下，将容器移离火场\n储罐、公路、铁路槽车火灾\n·尽可能远距离灭火或使用车载炮或移动水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象，立即撤离\n·切勿在储罐两端停留",
-    "characteristic": "·无色到浅黄色的透明液体\n·相对密度：0.70～0.80\n·闪点：-58℃～l0℃\n·爆炸极限：1.4％～7.6％",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": null,
-    "name": "汽油",
-    "id": 3,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿轻型防化服",
-    "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·作业时所有设备应接地\n·构筑围堤或挖沟槽收容泄漏物，防止进入水体、下水道、地下室或限制性空间\n·用泡沫覆盖泄漏物，减少挥发\n·用砂土或其他不燃材料吸收泄漏物\n·如果储罐发生泄漏，可通过倒罐转移尚未泄漏的液体\n·如果海上或水域发生溢油事故，可布放围油栏引导或遏制溢油，防止溢油扩散，使用撇油器、吸油棉或消油剂清除溢油\n",
-    "createDate": "2018-08-30 14:20:10"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：立即脱去污染的衣着，用清水彻底冲洗皮肤。就医\n·眼睛接触：立即提起跟睑，用流动清水或生理盐水冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n·食入：饮水，禁止催吐。就医",
-    "specialWarning": "★易燃．其蒸气与空气混合，能形成爆炸性混合物\n★注意：闪点很低.用水灭火无效\n★不得使用直流水扑救",
-    "dangerBody": "·IDLH:1100ppm[LFL]\n·具有刺激性和中枢神经系统抑制作用\n·可引起眼和上呼吸道刺激症状。蒸气浓度过高，可引起呼吸困难、紫绀等缺氧症状",
-    "purpose": "用作重整原料、乙烯裂解原料、制氢原料、化工原料以及车用汽油的调合组分；也可用作溶剂；可分离出多种有机原料，如汽油、苯、煤油、沥青等。",
-    "dangerEnvironmental": "·对水生生物有害\n·在土壤中具有极强的迁移性\n·有中等程度的生物富集性\n·可被生物降解，但长时间接触，对污泥微生物有害",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少l00m，下风向疏散至少500m。发生大规模泄漏时，初始隔离至少500m，下风向疏散至少1000m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离\n    火灾：火场内如有储罐、槽车或罐车，隔离800m。\n考虑撤离隔离区内的人员、物资\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进人低洼处\n·进入密闭空间之前必须先通风",
-    "type": 24,
-    "dangerCombustionExplosion": "·易燃，蒸气与空气可形成爆炸性混合物，遇明火高热极易燃烧爆炸\n·蒸气比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n·流速过快，容易产生和积聚静电\n·在火场中，受热的容器有爆炸危险",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "注意：闪点很低，用水灭火无效。\n  灭火剂：干粉、二氧化碳、泡沫。\n·不得使用直流水扑救\n·在确保安全的前提下，将容器移离火场\n储罐、公路/铁路槽车火灾\n·尽可能远距离灭火或使用车载炮或移动水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象，立即撤离\n·切勿在储罐两端停留",
-    "characteristic": "无色或浅黄色液体，有特殊气味。根据其用途不同，终馏点的切割温度各不相同，一般不高于220℃。不溶于水，溶于多数有机溶剂。禁配物：强氧化剂。\n·相对密度：0.63～0.76\n·爆炸极限：1.1％～8.7％",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": null,
-    "name": "石脑油",
-    "id": 6,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿灭火防护服或隔热服",
-    "emergencyLeakage": "·消除所有点火源（泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n  ·使用防爆的通讯工具\n  ·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·作业时所有设备应接地\n  ·构筑围堤或挖沟槽收容泄漏物，防止进人水体、下水道、地下室或限制性空间\n·用泡沫覆盖泄漏物，减少挥发\n·用砂土或其他不燃材料吸收泄漏物\n·如果储罐发生泄漏，可通过倒罐转移尚未泄漏的液体\n·如果海上或水域发生溢油事故，可布放围油栏引导或遏制溢油，防止溢油扩散，使用撇油器、吸油棉或消油剂清除溢油",
-    "createDate": "2018-08-30 14:59:53"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·眼睛接触：立即提起眼睑，用大量流动清水或生理盐水彻底冲洗l0～15min。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医。高压氧治疗",
-    "specialWarning": "★有毒，是强烈的神经毒物，对黏膜有强烈刺激作用\n★高浓度吸入可发生猝死\n★极易燃\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰",
-    "dangerBody": "·窒息性气体，是一种强烈的神经毒物，对眼和呼吸道有刺激作用\n·急性中毒出现眼和呼吸道刺激症状，急性气管、支气管炎或支气管周围炎，支气管肺炎，意识障碍等。重者意识障碍程度达深昏迷或呈植物状态，出现肺水肿、心肌损害、多脏器衰竭。眼部刺激引起结膜炎和角膜损害\n·H2S浓度单位对应关系：1ppm=1.5mg/m3\n·H2S的阈限值为10ppm；（几乎所有工作人员长期暴露都不会产生不利影响的某种有毒物质在空气中的最大浓度）\n·H2S的安全临界浓度（工作人员在露天安全工作8h可接受的最高浓度）为20ppm ；超过20ppm，进入现场要佩戴正压式空气呼吸器，要在主要下风口100m进行监测；\n·50ppm只允许接触10分钟；主要下风口100m测得浓度超过50ppm，周围居民转移；\n·H2S的危险临界浓度为100ppm；（达到此浓度对生命和健康会产生不可逆转的或延迟性的影响）",
-    "purpose": "主要用于制取硫磺。也用于制造硫酸、金属硫化物以及分离和鉴定金属离子。",
-    "dangerEnvironmental": "·对水生生物有很强的毒性作用\n·危险的空气污染物",
-    "typeName": "华北油区常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少500m，下风向疏散至少1500m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。小量泄漏，初始隔离30m，下风向疏散白天100m、夜晚100m；大量泄漏，初始隔离600m，下风向疏散白天3500m、夜晚8000m。\n火灾：火场内如有槽车或罐车，隔离1600m。\n·疏散无关人员并划定警戒区，严格限制非救援人员出入\n·气体比空气重，可沿地面扩散，并在低洼处或限制性空间(如下水道、地下室等)",
-    "type": 1,
-    "dangerCombustionExplosion": "·极易燃，与空气混合能形成爆炸性混合物，遇明火、高热能引起燃烧爆炸\n·气体比空气重，能在较低处扩散到相当远的地方，遇火回燃",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水、泡沫。\n·若不能切断泄漏气源，则不得扑灭正在燃烧的气体\n·小火：采用干粉、CO2、水幕或泡沫灭火\n·大火：采用水幕、雾状水或常规泡沫灭火，用大量水冷却容器，直至火灾扑灭\n·储罐火灾：利用固定式水炮、移动水炮等冷却燃烧罐及与其相邻的储罐，重点应是受火势威胁的一面，直至火灾扑灭\n·流淌火喷射泡沫（抗溶性泡沫）进行覆盖灭火\n·安全阀发生声响或储罐变色时，立即撤离",
-    "characteristic": "·无色气体，有特殊的臭味（臭蛋味)，高浓度时，使嗅觉迅速失灵而闻不到气味。溶于水。与碱发生放热中和反应\n·气体相对密度：1.19\n·爆炸极限：4.0％～46.0％\n·饱和蒸汽压：2026.5kPa（25.5℃）\n·临界温度：100.14℃",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式H2S",
-    "name": "硫化氢",
-    "id": 8,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿重型防化服",
-    "emergencyLeakage": "·将泄漏污染区人员迅速撤离至上风处，并立即进行隔离\n·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·合理通风，加速扩散，并喷雾状水稀释、溶解，禁止用水直接冲击泄漏物或泄漏源\n·在确保安全的情况下，采用关阀、堵漏等措施，切断泄漏源\n·如果泄漏无法控制，可考虑引燃泄漏物以减少有毒气体扩散\n·构筑围堤或挖坑，收容产生的大量废水，进行无害化处理，避免产生环境污染",
-    "createDate": "2018-08-30 15:28:42"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：如果发生冻伤，将患部浸泡于保持在38℃～42℃的温水中复温。不要涂擦。不要使用热水或辐射热。使用清洁、干燥的敷料包扎。就医\n·吸入：迅速脱离现场至空气薪鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医",
-    "specialWarning": "★极易燃\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰",
-    "dangerBody": "·吸入有毒，有麻醉作用\n·急性液化气轻度中毒主要表现为头昏、头痛、咳嗽、食欲减退、乏力、失眠等；重者失去知觉，小便失禁、呼吸变浅变慢\n·液化石油气发生泄漏时会吸收大量的热量造成低温，引起皮肤冻伤",
-    "purpose": "用作民用燃料、发动机燃料、加热炉燃料以及打火机的气体燃料，亦用作乙烯或制氢原料、化工原料。",
-    "dangerEnvironmental": "·污染空气",
-    "typeName": "华北油区常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少100m，下风向疏散至少800m。发生大规模泄漏时，初始隔离至少500m，下风向疏散至少1500m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离1600m。\n·疏散无关人员并划定警戒区\n·气体比空气重，可沿地面扩散，在低洼处聚集",
-    "type": 1,
-    "dangerCombustionExplosion": "·极易燃，蒸气与空气可形成爆炸性混合物，遇明火、高热极易燃烧爆炸\n·蒸气比空气重，能在较底处扩散到相当远的地方，遇火源会着火回燃\n·在火场中，受热的容器有爆炸危险",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：干粉、二氧化碳、水。\n·气瓶火灾，及时将气瓶移至安全地带\n·采取放空、泄压、倒罐等工艺措施\n·用大量水冷却着火罐和相邻储罐，直至火灾扑灭\n·干粉或雾状水灭火\n·储罐若发生异常变化或发出异常声音，须马上撤离；严禁在卧式储罐两端停留",
-    "characteristic": "·常温下加压而液化的石油气，主要组分为丙烷、丙烯、丁烷、丁烯，并含有少量戊烷、戊烯和微量硫化氢杂质：不溶于水\n·气体相对密度：l.5～2.0\n·爆炸极限：5％～33％",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": null,
-    "name": "液化石油气",
-    "id": 9,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿轻型防化服\n·处理液化气体时，应穿防寒服",
-    "emergencyLeakage": "·泄漏后迅速气化，周边将降温，并结冰成霜\n·消除点火源；采取关阀、堵漏、倒罐等工艺措施\n·雾状水驱散、稀释沉积漂浮的气体，禁止使用直流水，以免强水流冲击产生静电\n·防止气体通过下水道、通风系统扩散或进入限制性空间\n·如果储罐底部发生泄漏，可通过排污阀向罐内适量注水，抬高液位，造成罐内底部水垫层\n·如果泄漏无法控制，可考虑点燃，保持其稳定燃烧",
-    "createDate": "2018-08-30 15:50:04"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": null,
-    "specialWarning": "★极易燃\n★经压缩或加热可造成爆炸\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n★火场温度下易发生危险的聚合反应\n",
-    "dangerBody": "·具有弱麻醉作用，麻醉恢复快，无后作用\n·高浓度吸入可引起单纯窒息",
-    "purpose": "上个19块8     52块钱，账单显示150",
-    "dangerEnvironmental": "·水体中浓度较高时，对水生生物有害",
-    "typeName": "华北油区常见危险化学品",
-    "emergencyQuarantine": null,
-    "type": 1,
-    "dangerCombustionExplosion": "·爆炸范围非常宽，极易燃烧爆炸\n·能与空气形成爆炸性混合物\n·对撞击和压力敏感\n·遇明火、高热和氧化剂有燃烧、爆炸危险\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": null,
-    "characteristic": "15532810525最近3个月月租98，500   老版",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式C2H2",
-    "name": "乙炔",
-    "id": 10,
-    "individualProtection": null,
-    "emergencyLeakage": null,
-    "createDate": "2018-08-30 20:02:57"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：脱去污染的衣着，用清水彻底冲洗皮肤。就医\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗。就医\n·吸入：脱离现场至空气新鲜处。如呼吸困难，给输氧。就医\n·食入：尽快彻底洗胃。就医\n",
-    "specialWarning": "★易发生沸溢、喷溅\n★易燃，其蒸气与空气混合，能形成爆炸性混合物\n",
-    "dangerBody": "·原油在分馏、裂解和深加工过程中的产品和中间产品表现出不同的毒性",
-    "purpose": "主要用于生产汽油、航空煤油、柴油等发动机燃料以及液化气、石脑油、润滑油、石蜡、沥青、石油焦等，通过其馏分的高温热解，还用于生产乙烯、丙烯、丁烯等基本有机化工原料。\n",
-    "dangerEnvironmental": "·会在水面形成油膜层，对水生生物和水禽有很大的危害",
-    "typeName": "华北油区常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少50m，下风向疏散至少300m。发生大量泄漏时，初始隔离至少300m，下风向疏散至少1000m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离800m。\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处\n",
-    "type": 1,
-    "dangerCombustionExplosion": "·蒸气比空气重，能在较低处扩散到相当远的地方，遇火回燃\n·流速过快，容易产生和积聚静电\n·在火场中，受热的容器有爆炸危险",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：干粉、泡沫、雾状水。\n·分清储罐类型，燃烧的形式，采取相应的灭火措施\n·一次备足灭火用泡沫，灭火后持续实施冷却\n·如有流淌火，先灭流淌火，再灭装置或储罐火\n·优先选用固定、半固定消防设施，实施灭火、冷却\n·用大量水冷却着火罐和相邻储罐，直至火灾扑\n·着火油罐出现沸溢、喷溅前兆时，应立即撤离\n",
-    "characteristic": "·黄色、褐色乃至黑色的可燃性黏稠液体。不溶于水\n·沸点：从常温到500℃以上\n·相对密度：0.8～1.0\n·闪点：-20℃～100℃\n·爆炸极限：1.1％～8.7％\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": null,
-    "name": "原油",
-    "id": 11,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿隔热服或灭火防护服\n",
-    "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火)\n·采取关阀断料、堵漏，输转、倒罐等工艺措施\n·关闭雨排，筑堤或挖沟收容泄漏物，防止进入水体、下水道、雨排\n·用泡沫覆盖泄漏物，减少挥发\n",
-    "createDate": "2018-09-03 14:49:19"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：如果发生冻伤，将患部浸泡于保持在38～42℃的温水中复温。不要涂擦。不要使用热水或辐射热。使用清洁、干燥的敷料包扎。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
-    "specialWarning": "★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n★极易燃",
-    "dangerBody": "·吸入后可引起急性中毒。轻者出现头痛、头昏、胸闷、呕吐、乏力等。重者出现昏迷、口唇紫绀抽搐。部分中毒者出现心律失常\n·皮肤接触液化气体可引起冻伤\n",
-    "purpose": "干气一般用作民用燃料、锅炉燃料或制氢、合成氨、甲醇、碳黑等的原料。湿气可作裂解原料，制取乙烯、丙烯等，还可从中回收凝析汽油。",
-    "dangerEnvironmental": "·根据其成分的不同，对环境可能产生不同程的有害影响",
-    "typeName": "华北油区常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少100m，下风向疏散至少800m。大口径输气管线泄漏时，初始隔离至少1000m，下风向疏散至少1500m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离1600m。\n考虑撤离隔离区内的人员、物资\n·疏散无关人员并划定警戒区\n·在上风处停留\n",
-    "type": 1,
-    "dangerCombustionExplosion": "·极易燃，与空气混合能形成爆炸性混合物，遇热源和明火有燃烧爆炸的危险",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：干粉、雾状水、高倍数泡沫、二氧化碳。\n·泄漏后急速气化，形成蒸气云团，切忌用直流水扑救，防止发生迸溅\n·若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n·尽可能远距离灭火，槽车着火，冷却着火部位罐体，其它部位不能用水冷却\n·灭火后期，使用氮气等惰性气体置换，防止发生回火爆炸\n·容器突然发出异常声音或发生异常现象，立即撤离\n家用天然气小区调压箱进口压力0.2MPa，入户压力0.02MPa。\n家用天然气为低烃混合物，主要成分为甲烷。\n灭火剂：水（水流切封）、干粉、蒸气、氮气及二氧化碳。\n·断源灭火，切断着火源，使燃烧终止。若不能切断泄漏气源，则不允许熄灭泄漏处的火焰，防止气体外溢，发生二次着火爆炸事故\n·窒息灭火，对气压不大的漏气火灾，可用湿棉被、湿麻袋、湿布、湿棉毡、黏土封住着火口隔绝空气，使火熄灭。在关阀堵漏时，必须严格执行操作规程和动火规定，避免造成二次着火爆炸\n",
-    "characteristic": "·天然气的主要成分是甲烷(CH4)，无色气体，当混有硫化氢时，有强烈的刺鼻臭味。不溶于水\n·CNG（压缩天然气）无色、无味，由液相变为气相体积扩大约250倍\n· LNG（液化天然气）无色、无味，是天然气在经净化及超低温状态下（-163℃、一个大气压）冷却液化的产物，由液相变为气相体积扩大约600倍 \n·沸点-161.5℃\n·熔点-182.5℃\n·爆炸极限：5.0％～15％\n·饱和蒸气压（kpa): 53.32kPa(-168.8℃)\n·自燃温度537℃\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": null,
-    "name": "天然气",
-    "id": 12,
-    "individualProtection": "·泄漏状态下穿防静电服、佩戴正压式空气呼吸器，使用无火花工具\n·穿轻型防化服\n·处理液化气体时，应穿防寒服",
-    "emergencyLeakage": "·消除所有点火源（泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆通讯工具\n·LNG泄漏用高倍数泡沫覆盖，在下风或侧风方向设置不少于两层弧形水幕墙，稀释蒸汽云团\n·在确保安全的情况下采取关阀、堵漏等措施，切断泄漏源\n·天然气和CNG泄漏用雾状水稀释、驱散\n·大量泄漏，无法控制时，远程点燃，控制其稳定燃烧\n",
-    "createDate": "2018-09-06 09:54:13"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：立即脱去污染的衣着，用清水彻底冲洗皮肤。就医\n·眼睛接触：立即提起眼睑，用大量流动清水彻底冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处：保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n·食入：饮水，禁止催吐。就医\n",
-    "specialWarning": "★易燃，其蒸气与空气混合，能形成爆炸性混合物",
-    "dangerBody": "·直接将溶剂油吸人肺内，或在通风不良的情况下吸入其高浓度油雾，均可引起化学性肺炎",
-    "purpose": "主要用作溶剂。70号溶剂油用作香花香料及油脂工业作抽提溶剂；90号溶剂油用作化学试剂、医药溶剂等；120号溶剂油用于橡胶工业作溶剂；190号溶剂油用于机械零件的洗涤和工农业生产作溶剂；200号溶剂油用于涂料工业作溶剂和稀释剂：260号溶剂油为煤油型特种溶剂，可用于矿石的萃取等。\n",
-    "dangerEnvironmental": "·对水生生物有害",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少50m，下风向疏散至少300m。发生大量泄漏时，初始隔离至少500m.下风向疏散至少1000m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离800m，疏散无关人员并划定警戒区。\n考虑撤离隔离区内的人员、物资、疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处\n·进入密闭空间之前必须先通风\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·易燃，蒸气与空气可形成爆炸性混合物，遇明火、高热极易燃烧爆炸\n·蒸气比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n·流速过快，容易产生和积聚静电\n·在火场中，受热的容器有爆炸危险\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水、泡沫。\n·不得使用直流水扑救\n·在确保安全的前提下，将容器移离火场\n储罐、公路、铁路、槽车火灾\n·尽可能远距离灭火或使用车载炮或移动水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象，立即撤离\n·切勿在储罐两端停留\n",
-    "characteristic": "无色或浅黄色液体，不溶于水，溶于多数有机溶剂。\n·沸点：20℃～160℃\n·相对密度：0.78～0.97\n·引燃温度：350℃\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": null,
-    "name": "溶剂油",
-    "id": 13,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿灭火防护服、隔热服、轻型防化服",
-    "emergencyLeakage": "·消除所有点火源（泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·作业时所有设备应接地\n·构筑围堤或挖沟槽收容泄漏物．防止进入水体、下水道、地下室或限制性空间\n·用泡沫覆盖泄漏物，减少挥发\n·用砂土或其他不燃材料吸收泄漏物\n·如果储罐发生泄漏，可通过倒罐转移尚未泄漏的液体\n·如果海上或水域发生溢油事故，可布放围油栏引导或遏制溢油，防止溢油扩散，使用撇油器、吸油棉或消油剂清除溢油\n",
-    "createDate": "2018-09-06 10:00:19"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：立即脱去污染的衣着，应用2％硼酸液或大量清水彻底冲洗。就医\n·眼睛接触：立即提起眼睑，用大量流动清水或生理盐水彻底冲洗10～15min。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
-    "specialWarning": "★吸入可引起中毒性肺水肿。可致眼、皮肤和呼吸道灼伤；\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰；\n★处理液氨时，应穿防寒服。",
-    "dangerBody": "·IDLH:300ppm\n·具有强烈的刺激性，对眼和呼吸道有强烈刺激和腐蚀作用\n·急性氨中毒引起眼和呼吸道刺激症状，支气管炎或支气管周围炎，肺炎，重度中毒者可发生中毒性肺水肿。可因喉头水肿和呼吸道黏膜坏死脱落引起窒息。高浓度氨可引起反射性呼吸和心搏停止；可致眼和皮肤灼伤\n",
-    "purpose": "主要用于生产化肥、硝酸、铵盐、胺类。也用于药物、染料的生产。也常用作致冷剂。\n",
-    "dangerEnvironmental": null,
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少200m，下风向疏散至少1000m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离1600m。考虑撤离隔离区内的人员、物资。\n·疏散无关人员并划定警戒区，\n·在上风处停留\n·进入密闭空间之前必须先通风\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·易燃，能与空气形成爆炸性混合物\n·包装容器受热可发生爆炸\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水、抗溶性泡沫\n·在确保安全的前提下，将容器移离火场\n·禁止将水注人容器\n·毁损钢瓶由专业人员处置\n储罐火灾\n·尽可能远距离灭火或使用车载炮或水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·禁止向泄漏处和安全装置喷水，防止结冰\n·容器突然发出异常声音或发生异常现象，立即撤离\n·切勿在储罐两端停留\n",
-    "characteristic": "常温常压下为无色气体，有强烈的刺激性恶臭气味。20℃、891kpa下即可液化， 并放出大量的热。液氨在温度变化时，体积变化的系数很大。极易溶于水。与酸发生放热中和反应。腐蚀钢、铜、黄铜、铝、锡、锌及其合金，水溶液呈碱性。\n·沸点：-33.5℃\n·气体相对密度：0.59\n·爆炸极限：15％～30.2％\n·饱和蒸汽压：882kPa（20℃）\n·临界温度：132℃。\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式NH3 ",
-    "name": "液氨",
-    "id": 14,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿重型防化服\n·处理液氨时，应穿防寒服\n",
-    "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·作业时所有设备应接地\n·防止气体通过通风系统扩散或进人限制性空间\n·喷雾状水溶解、稀释漏出气\n·如果钢瓶发生泄漏，无法关闭时可浸入水中\n·高浓度泄漏区，喷稀盐酸吸收\n·隔离泄漏区直至气体散尽\n",
-    "createDate": "2018-09-06 10:23:22"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：脱去污染的衣着，脱离现场。就医。避免阳光照射。\n·眼睛接触：立即翻开上下眼睑，用流动清水冲洗至少15分钟。就医。\n·吸入：脱离现场至空气新鲜处。就医。\n·食入：误服者给饮足量温水，催吐。就医。\n",
-    "specialWarning": "★具有刺激性，致癌性\n★燃烧分解时放出腐蚀性、刺激性的黑色烟雾",
-    "dangerBody": "·沥表及其烟气对皮肤粘膜具有刺激性，有光毒作用和致肿瘤作用\n",
-    "purpose": "用于涂料、塑料、橡胶等工业以及铺筑路面等。\n",
-    "dangerEnvironmental": "·燃烧(分解)产物：一氧化碳、二氧化碳、成分未知的黑色烟雾\n",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": null,
-    "type": 24,
-    "dangerCombustionExplosion": "·遇高热、明火能燃烧",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：雾状水、泡沫、二氧化碳、干粉、砂土。\n",
-    "characteristic": "黑色液体，半固体或固体，不溶于水，不溶于丙酮、乙醚、稀乙醇等，溶于四氯化碳。\n·沸点：<470℃\n·相对密度：1.15～1.25\n·闪点：204.4℃\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": null,
-    "name": "沥青",
-    "id": 15,
-    "individualProtection": "·高浓度含量时佩戴正压式空气呼吸器\n·眼睛防护：一般不需特殊防护，高浓度接触时可戴安全防护眼镜\n",
-    "emergencyLeakage": "收集回收或无害处理后废弃。\n",
-    "createDate": "2018-09-06 15:38:49"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：如果发生冻伤，将患部浸泡于保持在38℃-42℃的温水中复温。不要涂擦。不要使用热水或辐射热。使用清洁、干燥的敷料包扎。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
-    "specialWarning": "★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n\n",
-    "dangerBody": "·甲烷对人基本无毒，但浓度过高时，使空气中氧气含量明显降低，使人窒息。当空气中甲烷达到25%～30%时，可引起头痛、头晕、乏力、注意力不集中、呼吸和心跳加快。若不及时脱离，可致窒息死亡\n",
-    "purpose": "广泛用作民用和锅炉燃料。用于制氢气、合成氨和有机合成原料气，也用于制炭黑、硝基甲烷、三氯甲烷等。\n",
-    "dangerEnvironmental": "·在土壤中具有很强的迁移性\n",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下初始隔离至少l00m，下风向疏散至少800m：然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离1600m。\n·疏散无关人员并划定警戒区\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·极易燃，与空气混合能形成爆炸性混合物，遇热源和明火有燃烧爆炸的危险\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：干粉、二氧化碳、水、雾状水。\n·切断气源。若不能立即切断气源，则不允许熄灭正在燃烧的甲烷       \n·小火用干粉灭火器或二氧化碳灭火器灭火，大火用水或雾状水灭火    \n·在确保安全的前提下，把盛有可燃气的容器运离火灾现场   \n·燃烧剧烈的大火，要与火源保持尽可能大的距离或者用遥控水炮;否则撤离火灾现场，让其自行燃尽。若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n·如果容器的安全阀发出声响，或容器变色，应迅速撤离\n",
-    "characteristic": "·无色、无臭、无味气体，微溶于水\n·气体相对密度：0.6\n·爆炸极限：5.0％～16％\n·饱和蒸汽压：53.32kPa（-168.8℃）\n·临界温度：-82.6℃\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式CH4    \n",
-    "name": "甲烷",
-    "id": 17,
-    "individualProtection": "·佩戴正压式空气呼吸器，穿防静电服   \n·着火时，穿隔热服或灭火防护服\n",
-    "emergencyLeakage": "·消除点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·在确保安全的情况下，采用关阀、堵漏等措施，切断泄漏源\n·防止气体通过通风系统扩散或进入限制性空间\n·雾状水稀释泄漏气体\n·隔离泄漏区直至气体散尽\n",
-    "createDate": "2018-09-06 16:20:37"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：如果发生冻伤，将患部浸泡于保持在38～42℃的温水中复温。不要涂擦。不要使用热水或辐射热。使用清洁、干燥的敷料包扎。就医\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
-    "specialWarning": "★极易燃\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n",
-    "dangerBody": "·急性毒性\n·具有弱刺激和麻醉作用\n·吸入高浓度出现头晕、头痛、嗜睡、恶心、酒醉状态\n·皮肤接触液态丁烷可造成冻伤",
-    "purpose": "是有机合成的原料，用于制取丁烯、丁二烯、顺丁烯二酸酐、乙烯、卤代丁烷等。也用作燃料、树脂发泡剂、溶剂、制冷剂等。\n",
-    "dangerEnvironmental": "·具有中等强度的生物富集性\n",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少l00m，下风向疏散至少800m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离1600m。\n·考虑撤离隔离区内的人员、物资\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处\n·气体比空气重，可沿地面扩散，并在低洼处或限制性空间(如下水道、地下室等)聚集\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·极易燃，与空气混合能形成爆炸性混合物，遇热源和明火有燃烧爆炸的危险\n·比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水或泡沫。\n·若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n·在确保安全的前提下，将容器移离火场\n",
-    "characteristic": "无色气体，有轻微的不愉快气味。不溶于水。\n·气体相对密度：2.1\n·爆炸极限：1.5％～8.5％\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式C4H10 \n",
-    "name": "丁烷",
-    "id": 18,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿轻型防化服\n·处理液化气体时，应穿防寒服\n",
-    "emergencyLeakage": "·消除火源，关闭雨排，疏散警戒\n·采用关阀、放空、输转等工艺措施\n·气体比空气重，上风处停留，切勿进入低洼处\n·合理通风，加速扩散。雾状水稀释、溶解\n·失去控制，点燃；控制稳定燃烧\n",
-    "createDate": "2018-09-06 16:55:19"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：脱去污染的衣着，用清水彻底冲洗皮肤。就医\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处：保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n·食入：饮水，禁止催吐。就医\n",
-    "specialWarning": "★高度易燃，其蒸气与空气混合．能形成爆炸性混合物\n★注意：闪点很低，用水灭火无效\n★不得使用直流水扑救\n",
-    "dangerBody": "·IDLH：1500ppm[LEL]\n·高浓度具有轻度刺激和麻醉作用，严重者可发生昏迷\n",
-    "purpose": "是有机合成的原料，用于制取丁烯、丁二烯、顺丁烯二酸酐、乙烯、卤代丁烷等。也用作燃料、树脂发泡剂、溶剂、制冷剂等。\n",
-    "dangerEnvironmental": "·对水生生物有毒性作用，能在水环境中造成长期的有害影响\n·在土壤中具有极强的迁移性\n·有中等程度的生物富集性\n·很难被生物降解\n",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少50m，下风向疏散至少300m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离800m。\n考虑撤离隔离区内的人员、物资\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处\n·进入密闭空间之前必须先通风\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·易燃，蒸气与空气可形成爆炸性混合物，遇明火、高热极易燃烧爆炸\n·蒸气比空气重，能往较低处扩散到相当远的地方，遇火源会着火回燃\n·流速过快，容易产生和积聚静电\n·在火场中，受热的容器有爆炸危险",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "注意：闪点很低，用水灭火无效。\n灭火剂：干粉、二氧化碳、泡沫。\n ·不得使用直流水扑救\n ·在确保安全的前提下，将容器移离火场，储罐、公路、铁路、槽车火灾\n ·尽可能远距离灭火或使用车载炮或移动水炮灭火\n ·用大量水冷却容器，直至火灾扑灭\n ·容器突然发出异常声音或发生异常现象，立即撤离\n",
-    "characteristic": "无色透明的易挥发液体，有微弱的薄荷香味。微溶于水。\n·沸点：36.1℃\n·相对密度：0.63\n·闪点：-49℃\n·爆炸极限：1.7％～9.75％\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式C5H12  ",
-    "name": "戊烷",
-    "id": 19,
-    "individualProtection": "·佩戴全防型滤毒罐\n·穿轻型防化服",
-    "emergencyLeakage": "·消除所有点火源泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·作业时所有设备应接地\n·构筑围堤或挖沟槽收容泄漏物，防止进人水体、下水道、地下室或限制性空间\n·喷雾状水稀释挥发的蒸气\n·用泡沫覆盖泄漏物，减少挥发\n·用砂土或其他不燃材料吸收泄漏物\n·如果储罐发生泄漏，可通过倒罐转移尚未泄漏的液体\n",
-    "createDate": "2018-09-06 17:00:53"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：脱去污染的衣着，用清水彻底冲洗皮肤。就医\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n·食入：饮水，禁止催吐。就医\n",
-    "specialWarning": "★高度易燃，其蒸气与空气混合，能形成爆炸性混合物\n★注意：闪点很低，用水灭火无效\n★不得使用直流水扑救\n",
-    "dangerBody": "·IDLH：1100ppm[LEL]\n·对中枢神经系统有抑制作用。有刺激作用\n·接触蒸气时，可产生眼和上呼吸道刺激症状，严重者可发生肺炎、肺水肿\n·长期接触出现头痛、头晕、乏力、胃纳减退等\n",
-    "purpose": "主要用作橡胶、涂料、油墨、烯烃聚合的溶剂，植物油提取剂，颜料稀释剂。还是高辛烷值燃料。\n",
-    "dangerEnvironmental": "·对水生生物有毒性作用，能在水环境中造成长期的有害影响\n·在土壤中具有很强的迁移性\n·具有很强的生物富集性\n·易挥发，是有害的空气污染物\n·在低浓度时，易被生物降解，但在高浓度时，会造成微生物中毒，影响生物降解能力\n",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少l00m，下风向疏散至少500m：然后进行气体浓度检测，根据有害蒸气的实际浓度调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离800m。\n考虑撤离隔离区内的人员、物资\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进人低洼处\n·进入密闭空间之前必须先通风\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·易燃，蒸气与空气可形成爆炸性混合物，遇明火、高热极易燃烧爆炸\n·蒸气比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n·在火场中，受热的容器有爆炸危险\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "注意：闪点很低，用水灭火无效。\n灭火剂：干粉、二氧化碳、泡沫。\n·不得使用直流水扑救\n·在确保安全的前提下，将容器移离火场\n储罐、公路、铁路、槽车火灾\n·尽可能远距离灭火或使用车载炮或移动水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象，立即撤离\n·切勿在储罐两端停留\n",
-    "characteristic": "·无色易挥发液体，有微弱的特殊气味。不溶于水。能溶解部分塑料、橡胶和涂层\n·沸点：68.74℃\n·相对密度：0.66\n·闪点：-25.5℃\n·爆炸极限：1.2％～6.9％\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式C6H14",
-    "name": "己烷",
-    "id": 20,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿重型防化服\n",
-    "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·作业时所有设备应接地\n·构筑围堤或挖沟槽收容泄漏物，防止进入水体、下水道、地下室或限制性空间\n·用雾状水稀释挥发的蒸气，禁止用直流水冲击泄漏物\n·用泡沫覆盖泄漏物，减少挥发\n·用砂土或其他不燃材料吸收泄漏物\n·如果储罐发生泄漏，可通过倒罐转移尚未泄漏的液体\n",
-    "createDate": "2018-09-06 17:03:01"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：如果发生冻伤，将患部浸泡于保持在38～42％的温水中复温。不要涂擦：不要使用热水或辐射热。使用清洁、干燥的敷料包扎：就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
-    "specialWarning": "★有较强的麻醉作用\n★极易燃\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n★火场温度下易发生危险的聚合反应\n",
-    "dangerBody": "·具有较强的麻醉作用\n·吸入高浓度时可迅速引起意识丧失。吸入新鲜空气后，一般很快清醒\n·皮肤接触液态乙烯可发生冻伤\n",
-    "purpose": "·是合成纤维、合成橡胶、合成塑料的基本化工原料。用于生产聚乙烯、二氯乙烷、氯乙烯、环氧乙烷、乙二醇、苯乙烯、乙苯等\n·也可用作水果、蔬菜的催熟剂\n",
-    "dangerEnvironmental": "·在土壤中具有很强的迁移性\n·可被生物降解\n",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少100m，下风向疏散至少800m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离1600m。\n考虑撤离隔离区内的人员、物资\n·疏散无关人员并划定警戒区\n·在上风处停留\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·极易燃，与空气混合能形成爆炸性混合物，遇明火、高热或与氧化剂接触，有引起燃烧爆炸的危险\n·高温或接触氧化剂能引起燃烧或爆炸性聚合\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水、泡沫。\n·若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n·在确保安全的前提下，将容器移离火场\n储罐火灾\n·尽可能远距离灭火或使用车载炮或移动水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象，立即撤离\n·当大火已经在货船蔓延，立即撤离，货船可能爆炸\n",
-    "characteristic": "·无色气体，带有甜味。不溶于水。有机过氧化物、烷基锂等引发剂存在时，易发生聚合，放出大量的热量\n·气体相对密度：0.98\n·爆炸极限：2.7％～36.0％\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式C2H4\n",
-    "name": "乙烯",
-    "id": 21,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿轻型防化服\n·处理液态乙烯时应穿防寒服\n",
-    "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·作业时所有设备应接地\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·防止气体通过通风系统扩散或进入限制性空间\n·喷雾状水改变蒸气云流向\n·隔离泄漏区直至气体散尽\n",
-    "createDate": "2018-09-06 17:05:06"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医。高压氧治疗\n",
-    "specialWarning": "★有毒，吸入可因人体缺氧而致死\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n",
-    "dangerBody": "·IDLH：1200ppm\n·经呼吸道侵入体内，与血红蛋白结合生成碳氧血红蛋白，使血液携氧能力明显降低，造成组织缺氧\n·急性中毒出现剧烈头痛、头晕、耳鸣、心悸、恶心、呕吐、无力、意识障碍，重者出现深昏迷、脑水肿、肺水肿和心肌损害。血液碳氧血红蛋白浓度升高\n",
-    "purpose": "是合成气（CO、H2）、煤气的主要成分和基本有机化工的重要原料。用于制甲醇、醋酸、DMF、碳酸二甲酯、草酸、甲酸光气、金属羰基化合物等。也用作精炼金属的还原剂。          \n",
-    "dangerEnvironmental": "·在很低的浓度就能对水生生物造成危害\n·是有害的空气污染物\n",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少200m，下风向疏散至少1000m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n    火灾：火场内如有储罐、槽车或罐车，隔离1600m。\n考虑撤离隔离区内的人员、物资\n  ·疏散无关人员并划定警戒区\n  ·在上风处停留\n·进入密闭空间之前必须先通风\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·易燃，在空气中燃烧时火焰为蓝色\n·与空气混合能形成爆炸性混合物，遇明火或高热能引起燃烧爆炸\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水、泡沫。\n·若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n·用大量水冷却临近设备或着火容器，直至火灾扑灭\n·毁损容器由专业人员处置\n",
-    "characteristic": "·无色、无味、无臭气体。微溶于水\n·气体相对密度：0.97\n·爆炸极限：12%～74%\n·沸点：-191.5℃\n·自燃点：608.89℃\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式CO",
-    "name": "一氧化碳",
-    "id": 22,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿轻型防化服\n",
-    "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·作业时所有设备应接地\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏\n·防止气体通过通风系统扩散或进入限制性空间\n·喷雾状水改变蒸汽云流向\n·隔离泄漏区直至气体散尽\n",
-    "createDate": "2018-09-06 17:08:08"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
-    "specialWarning": "★易燃气体\n★与空气混合能形成爆炸性混合物，遇热源和明火有燃烧爆炸的危险\n",
-    "dangerBody": "·有单纯性窒息及麻醉作用\n·人短暂接触1％丙烷，不引起症状；10％以下的浓度，只引起轻度头晕；接触高浓度时可出现麻醉状态、意识丧失；极高浓度时可致窒息\n·液态丙烷可致皮肤冻伤\n",
-    "purpose": "用于做燃料、化工原料。\n",
-    "dangerEnvironmental": "·在土壤中滞留时间长，不易被生物降解\n",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少l00m，下风向疏散至少800m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离1600m；疏散无关人员并划定警戒区。\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·气体比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃或爆炸\n·与氧化剂接触猛烈反应\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：雾状水、泡沫、二氧化碳、干粉。\n·切断气源。若不能切断气源，则不允许熄灭泄漏处的火焰。\n·喷水冷却容器，可能的话将容器从火场移至空旷处\n",
-    "characteristic": "无色气体，纯品无臭。微溶液于水，溶液于乙醇、乙醚。\n·气体相对密度：1.56\n·爆炸极限：2.1％～9.5％\n·临界温度：96.8℃\n·饱和蒸汽压：53.32kpa(-55.6℃)\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式C3H8",
-    "name": "丙烷",
-    "id": 23,
-    "individualProtection": "·佩戴正压式空气呼吸器，穿防静电服   \n·着火时，穿隔热服或灭火防护服\n",
-    "emergencyLeakage": "·消除火源，关闭雨排，疏散警戒\n·采用关阀、放空、输转等工艺措施\n·气体比空气重，上风处停留，切勿进入低洼处\n·合理通风，加速扩散。雾状水稀释、溶解\n·失去控制，点燃；控制稳定燃烧\n",
-    "createDate": "2018-09-06 19:28:37"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：如果发生冻伤，将患部浸泡于保持在38～42℃的温水中复温。不要涂擦。不要使用热水或辐射热。使用清洁、干燥的敷料包扎。就医\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
-    "specialWarning": "★极易燃\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰",
-    "dangerBody": "·有麻醉作用\n·吸入高浓度气体后可产生头昏、乏力，甚至意识丧失。严重中毒时出现血压下降和心律失常\n·皮肤接触液态丙烯可引起冻伤\n",
-    "purpose": "用于生产聚丙烯、乙丙橡胶、丙烯腈、辛醇、异丁醇、异丙苯、丙烯酸、环氧丙烷等。炼油工业中用于制取叠合汽油。\n",
-    "dangerEnvironmental": "·在土壤中具有中等强度的迁移性\n",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少l00m，下风向疏散至少800m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离1600m。\n疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处\n·气体比空气重，可沿地面扩散，并在低洼处或限制性空间(如下水道、地下室等)聚集疏散无关人员并划定警戒区。\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·蒸气比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n·受热能发生聚合反应，甚至导致燃烧爆炸\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水、泡沫。\n·若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n·在确保安全的前提下，将容器移离火场\n储罐火灾\n·尽可能远距离灭火或使用车载炮或移动水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象，立即撤离\n",
-    "characteristic": "无色气体，略带烃类特有的气味。微溶于水。催化剂(酸等)或引发剂(有机过氧化物等)存在时，易发生聚合，放出大量的热量。\n·气体相对密度：1.5\n·爆炸极限：1.0％～15.0％\n·临界温度：91.8℃\n·饱和蒸汽压：588.29kPa（0℃）\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式C3H6 ",
-    "name": "丙烯",
-    "id": 24,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿轻型防化服\n·处理液化丙烯时，应穿防寒服\n",
-    "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·作业时所有设备应接地\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·防止气体通过下水道、通风系统扩散或进入限制性空间\n·喷雾状水改变蒸气云流向\n·隔离泄漏区直至气体散尽\n",
-    "createDate": "2018-09-07 08:48:00"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
-    "specialWarning": "★极易燃\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n",
-    "dangerBody": "·有轻度麻醉和刺激作用，并可引起窒息\n·急性中毒：出现粘膜刺激症状、嗜睡、血压稍升高、心率增快\n·高浓度吸入可引起窒息、昏迷\n",
-    "purpose": "用于制丁二烯、异戊二烯、合成橡胶等。\n",
-    "dangerEnvironmental": "·对环境有危害，对水体、土壤和大气可造成污染\n",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少l00m，下风向疏散至少800m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离1600m；疏散无关人员并划定警戒区。\n\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·蒸气比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n·受热能发生聚合反应，甚至导致燃烧爆炸\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：雾状水、泡沫、二氧化碳、干粉。\n切断气源。若不能切断气源则不允许熄灭泄漏处的火焰。喷水冷却容器可能的话将容器从火场移至空旷处。\n",
-    "characteristic": "无色气体，不溶于水，微溶于苯，易溶于乙醇、乙醚。\n·气体相对密度：1.93\n·爆炸极限：1.6%～10%\n·燃点温度：385℃\n·饱和蒸汽压：189.48(kPa) (10℃)\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式C4H8",
-    "name": "丁烯",
-    "id": 25,
-    "individualProtection": "·呼吸系统：一般不需要特殊防护，高浓度接触时可佩戴正压式空气呼吸器\n·眼睛防护：戴化学安全防护眼镜\n·身体防护：防静电服\n",
-    "emergencyLeakage": "·切断火源\n·尽可能切断泄漏源。用工业覆盖层或吸附/吸收剂盖住泄漏点附近的下水道等地方，防止气体进入\n·合理通风，加速扩散\n·喷雾状水稀释\n",
-    "createDate": "2018-09-07 09:24:27"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：脱去污染的衣着，用清水彻底冲洗皮肤。就医\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难．给输氧。呼吸心跳停止，立即进行心肺复苏术。就医\n·食入：催吐。2％碳酸氢钠洗胃，硫酸镁导泻。就医\n·解毒剂：口服乙醇或静脉输乙醇、碳酸氢钠、叶酸、4-甲基吡唑\n",
-    "specialWarning": "★易燃．其蒸气与空气混合，能形成爆炸性混合物\n★吸入煤油蒸气引起中毒反应\n",
-    "dangerBody": "·急性中毒：吸入高浓度煤油蒸气，常先有兴奋，后转入抑制，表现为乏力、头痛、酩酊感、神志恍惚、肌肉震颤、共济运动失调；严重者出现定向力障碍、谵妄、意识模糊等；蒸气可引起眼及上呼吸道刺激症状；吸入液态煤油可引起吸入性肺炎；摄入口腔、咽喉和胃肠道刺激症状\n·慢性影响：神经衰弱征候群为主要表现，还有眼及呼吸道刺激症状，接触性皮炎、干燥等皮肤损害\n",
-    "purpose": "用作燃料、溶剂、杀虫喷雾剂。\n",
-    "dangerEnvironmental": "·水体中浓度较高时．对水生生物有害\n",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少100m，下风向疏散至少500m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离800m。\n考虑撤离隔离区内的人员、物资\n  ·疏散无关人员并划定警戒区\n  ·在上风处停留，切勿进入低洼处\n  ·进入密闭空间之前必须先通风\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·易燃，蒸气与空气可形成爆炸性混合物，遇明火、高热能引起燃烧爆炸\n·蒸气比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：雾状水、抗溶性泡沫。\n·在确保安全的前提下，将容器移离火场\n·筑堤收容消防污水以备处理，不得随意排放\n·尽可能远距离灭火或使用车载炮或移动水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象，立即撤离\n·切勿在储罐两端停留\n",
-    "characteristic": "·水白色至淡黄色流动性油状液体，易挥发，不溶于水\n  ·沸点：175～325℃\n  ·相对密度：0.8～1.0\n  ·闪点：43～72℃\n·爆炸极限：0.7％～5.0％\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式C3H6 \n",
-    "name": "煤油",
-    "id": 26,
-    "individualProtection": "·佩戴正压式空气呼吸器\n  ·穿轻型防化服\n",
-    "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·作业时所有设备应接地\n·构筑围堤或挖沟槽收容泄漏物，防止进入水体、下水道、地下室或限制性空间\n·用抗溶性泡沫覆盖泄漏物，减少挥发\n·用雾状水稀释泄漏物挥发的蒸气\n·用砂土或其他不燃材料吸收泄漏物\n·如果储罐发生泄漏，可通过倒罐转移尚未泄漏的液体\n",
-    "createDate": "2018-09-07 09:29:08"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：如果发生冻伤，将患部浸泡于保持在38℃～42℃的温水中复温。不要涂擦。不要使用热水或辐射热。使用清洁、干燥的敷料包扎。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
-    "specialWarning": "★极易燃\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n",
-    "dangerBody": "·吸入高浓度时，由于窒息和麻醉作用可引起人在短时间内死亡，死亡多为心脏停搏或呼吸麻痹，长期接触引起神经系统功能障碍，尤其是植物神经系统功能障碍\n·皮肤接触液化气引起冻伤\n",
-    "purpose": "用作燃料和用于炭黑、氢、乙炔、甲醛等的制造。\n",
-    "dangerEnvironmental": "·在土壤中滞留时间长，不易被生物降解\n",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下劫始隔离至少l00m，下风向疏散至少800m：然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离1600m。\n·在上风处停留\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·与空气混合能形成爆炸混合物，遇明火、高热能引起燃烧爆炸\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水、泡沫。\n·采取关阀断料、泄压、放空等工艺措施\n·当现场有流淌火时，可采取筑堤堵截、分割合击、逐片消灭的方法\n·对相邻装置和设备进行充分冷却，采取工艺处置后，在条件允许的情况下可用蒸汽、干粉、雾状水等灭火剂灭火\n·灭火后充分利用雾状水对气体进行稀释，协助工程抢险人员实施作业\n·注意观察表力压，保持系统处于正压状态，防止回火引起管线、设备爆炸\n·系统突然发出异常声音或发生异常现象，立即撤离\n",
-    "characteristic": "无色、无臭、无味气体，不溶于水。\n·气体相对密度：0.55\n·爆炸极限：1.0％～1.5％\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": null,
-    "name": "干气",
-    "id": 27,
-    "individualProtection": "·泄漏状态下佩戴正压式空气呼吸器，防静电服    \n·灭火时穿隔热服或避火服\n",
-    "emergencyLeakage": "·消除火源，疏散警戒\n·泄漏量小时，利用雾状水、蒸汽、氮气稀释、驱散\n·较大泄漏量时，可点燃，控制其稳定燃烧\n·打开放空系统，实施远程点燃\n",
-    "createDate": "2018-09-07 09:44:07"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
-    "specialWarning": "★可燃物\n\n",
-    "dangerBody": "·本身无毒， 注意不同添加剂的毒性\n·热解产物酸、醛等对眼、上呼吸道有刺激作用\n",
-    "purpose": "可用作工程塑料， 适用于制电视机、收音机外壳、电器绝缘材料、防腐管道、板材、贮槽等， 也用于编织包装袋、包装薄膜。\n",
-    "dangerEnvironmental": null,
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少l00m，下风向疏散至少800m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离1600m；疏散无关人员并划定警戒区。\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·粉体与空气可形成爆炸性混合物， 当达到一定浓度时， 遇火星会发生爆炸\n·加热分解产生易燃气体\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：雾状水、泡沫、干粉、二氧化碳、砂土。\n·尽可能将容器从火场移至空旷处。\n",
-    "characteristic": "白色、无臭、无味固体。\n·相对密度：0.9\n·引燃温度：420℃\n·熔点：165℃-170℃\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式（C3H6）n\n",
-    "name": "聚丙烯",
-    "id": 28,
-    "individualProtection": "·空气中粉尘浓度超标时，佩戴正压式空气呼吸器\n·火灾时穿隔热服\n",
-    "emergencyLeakage": "·隔离泄漏污染区，限制出入\n·切断火源\n·用洁净的铲子收集于干燥、洁净、有盖的容器中，转移至安全场所\n·若大量泄漏，收集回收或运至废物处理场所处置\n",
-    "createDate": "2018-09-07 09:53:40"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·迅速离开现场到上风或侧风方向空气无污染处\n·注意对呼吸道（戴防毒面具、面罩或用湿毛巾捂住口鼻）、皮肤（穿防护服）进行防护\n·对中毒昏迷者立即进行人工呼吸、体外心脏挤压以及心肺复措施，同时吸氧\n·皮肤接触：脱去污染服装，皮肤用清水彻底冲洗；眼污染用生理盐水、清水或2%碳酸氢钠溶液彻底冲洗，注意呼吸道是否通畅，防止窒息或阻塞；对消化道服入者应立即催吐 \n·对症处理后由医务人员及时送医院继续观察治疗 \n",
-    "specialWarning": "★易燃，遇空气燃烧，遇水爆炸\n★不得使用直流水扑救\n",
-    "dangerBody": "·具有强烈刺激和腐蚀作用，主要损害呼吸道和眼结膜，高浓度吸入可引起肺水肿。吸入其烟雾可致烟雾热。皮肤接触可致灼伤，引起充血、水肿和起水疱，疼痛剧烈\n",
-    "purpose": "用于有机合成，也用作火箭燃料。\n",
-    "dangerEnvironmental": "\n",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·化学反应活性很高，接触空气会冒烟自燃\n·对微量的氧及水分反应极其灵敏，易引起燃烧爆炸\n·在火场中，受热的容器有爆炸危险\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：D类干粉。\n·使用D类干粉灭火\n",
-    "characteristic": "无色透明液体，具有强烈的霉烂气味。\n·相对密度：0.84\n·饱和蒸汽压：0.53kPa（83℃）",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式 (CH3CH2)3Al\n",
-    "name": "三乙基铝",
-    "id": 29,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿重型防化服\n·灭火时穿灭火防护服",
-    "emergencyLeakage": "·消除所有点火源（泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，切断泄漏源\n·构筑围堤或挖沟槽收容泄漏物，防止进入水体、下水道、地下室或限制性空间\n·用砂土干粉、石墨等覆盖。污染地域尽量不用水冲洗",
-    "createDate": "2018-09-07 10:23:17"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·吸入：迅速脱离现场至空气新鲜处。保持呼吸道畅通。如呼吸困难，给输氧。呼吸心跳停止，立即进行心肺复苏术。立即就医。\n·皮肤接触：脱去污染的衣着，用肥皂水和清水彻底冲洗皮肤。如有不适感，就医。\n·眼睛接触：立即提起眼脸，用大量流动清水或生理盐水冲洗。如有不适感，就医。\n·食入：饮足量温水，禁止催吐，就医。\n",
-    "specialWarning": "★易燃液体，燃烧会产生一氧化碳、二氧化碳等有毒气体\n★在火场中，容器内压增大有开裂和爆炸的危险\n",
-    "dangerBody": "·本品蒸气或雾对眼睛、粘膜和上呼吸道有刺激作用，可引起化学性肺炎\n·对皮肤有刺激性\n",
-    "purpose": "主要是生产无铅、高辛烷值、含氧汽油的理想调合组份，作为汽油添加剂已经在全世界范围内普遍使用。\n",
-    "dangerEnvironmental": "·该物对环境有危害，易于与水融合，可渗入土壤，破坏地下水质\n",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少50m，下风向疏散至少300m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离800m。\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·易燃，其蒸气与空气可形成爆炸性混合物，遇明火、高热或与氧化剂接触，有引起燃烧爆炸的危险\n·与氧化剂接触猛烈反应\n·其蒸气比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "灭火剂：采用抗溶性泡沫、干粉、二氧化碳、砂土灭火剂灭火。\n·堵截火势，阻止蔓延\n·冷却控制，逐步推进\n·加强掩护，确保安全\n·调集力量，一举消灭\n·排除险情，稳定燃烧\n",
-    "characteristic": "一种无色、透明、高辛烷值的液体，具有醚样气味。\n·熔点：-108.6℃\n·沸点：55.2℃\n·相对密度：0.74\n·闪点：-10℃\n·爆炸极限：1.6％～15.1％\n·饱和蒸汽压：27kPa(20℃)\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式CH3OC(CH3)3\n",
-    "name": " MTBE",
-    "id": 30,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿防静电服\n·戴化学安全防护眼镜\n·戴橡胶耐油手套\n",
-    "emergencyLeakage": "·消除火源\n·采用关阀、堵漏、输转、倒罐等工艺措施切断泄漏源\n·泡沫覆盖，减少挥发\n·筑堤、导流，回收泄漏物，防止进入水体、雨排\n·用砂土或其他不燃材料吸收泄漏物\n",
-    "createDate": "2018-09-07 10:25:37"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
-    "specialWarning": "★极易燃\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n",
-    "dangerBody": "·单纯性窒息性气体\n·在高浓度时，由于空气中氧分压降低引起缺氧性窒息\n",
-    "purpose": "主要用于盐酸、氨和甲醇的合成；做为冶金的还原剂，石油炼制中的加氢脱硫剂。液态氢可作高速推进火箭的燃料；也是极有前途的无污染燃料。\n",
-    "dangerEnvironmental": "·对环境无害\n",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少200m，下风向疏散至少800m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离1600m。\n考虑撤离隔离医内的人员、物资\n·疏散无关人员并划定警戒区\n·在上风处停留\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·气体比空气轻，在室内使用和储存时，泄漏气体上升滞留屋顶不易排出，遇火星会引起爆炸\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": null,
-    "characteristic": "·无色、无臭的气体。很难液化。液态氢无色透明。极易扩散和渗透。微溶于水\n·气体相对密度：0.07\n·爆炸极限：4％～75％\n·饱和蒸汽压：13.33kPa（-257.9℃）\n·临界温度：-240℃\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式H2\n",
-    "name": "氢气",
-    "id": 31,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿轻型防化服\n",
-    "emergencyLeakage": "·建立警戒区。迅速撤离泄漏区人员至上风处，并进行隔离，划出警戒线，设立明显标示，通知警戒区内和周边人员迅速撤离，禁止车辆和无关人员进入警戒区\n·立即切断泄露气源。并迅速撤离泄漏污染区至上风处。在保证安全的情况下堵漏，抢修作业应使用防静电工具\n·消除火种。停止所有用火作业和消除可能产生火花的活动，禁止敲击设备管道，防止摩擦、撞击产生火花；用开花水枪对准泄漏的罐壁和泄漏点区域喷洒消防水，以降低现场气温和泄漏的设备温度，在确保安全的情况下，采用关阀、堵漏等措施，切断气源\n·泄压排放。在工艺流程完好的情况下，通过排放线将容器内的氢气排放至紧急事故火炬管线\n·稀释泄漏区氢气。对泄漏污染区进行通风，若不能及时切断泄露时，应采用蒸汽进行稀释，防止氢气积聚形成爆炸性气体混合物\n·若泄漏发生在室内，宜使用吸风系统将泄漏的氢气排至室外，对室内进行通风置换。稀释室内氢气浓度，防止氢气积聚形成爆炸性气体混合物，通风系统使用防爆设备\n·使用本质安全型通讯工具\n火灾扑救\n灭火剂：干粉、二氧化碳、雾状水。\n·应及时切断气源。若不能立即切断气源，不得熄灭正在燃烧的气体，并用水强制冷却着火设备，同时可向氢气设备通入惰性气体氮气，氢气系统应保持正压状态，防止氢气系统回火发生。若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n·冷却和控制燃烧。限制空间氢气设备着火，则不允许熄灭泄漏处的火焰，应积极喷水冷却容器，控制氢气稳定燃烧，防止火灾扩大或爆炸。逐步切断气源，并向隔离管线、阀门及邻近的设备喷水，保护毗邻的建筑物免受火灾威胁，控制火势的扩大和蔓延。氢气设备通入氮气让其自行熄灭\n·灭火。组织足够消防力量，将火势控制在最小范围，在用射流水冷却着火罐壁的情况下，用干粉喷洒着火点，覆盖火源，终止燃烧，直到火焰完全熄灭。在未能切断气源的情况下，严禁熄灭已稳定燃烧的火焰\n·设备突然发出异常声音或发生异常现象，立即撤离\n",
-    "createDate": "2018-09-07 14:36:47"
-  }, {
-    "fileName": "",
-    "emergencyFirstAid": "·皮肤接触：脱去污染的衣着，用清水彻底冲洗皮肤。就医\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医。禁用肾上腺素\n·食入：饮水，禁止催吐。就医\n",
-    "specialWarning": "★致癌物\n★易燃，其蒸气与空气混合，能形成爆炸性混合物\n★注意：闪点很低，用水灭火无效\n★不得使用直流水扑救\n",
-    "dangerBody": "·IDLH:500ppm\n·吸入高浓度苯蒸气对中枢神经系统有麻醉作用，出现头痛、头晕、恶心、呕吐、神志恍惚、嗜睡等。重者意识丧失、抽搐，甚至死亡\n·长期接触苯对造血系统有损害，引起白细胞和血小板减少，重者导致再生障碍性贫血\n·本品可引起白血病。具有生殖毒性\n",
-    "purpose": "主要用于制造苯的衍生物。是生产合成树脂、合成橡胶、合成纤维、染料、洗涤剂、医药、农药和特种溶剂的重要原料。也用作溶剂和燃料掺合剂。\n",
-    "dangerEnvironmental": "·具有很强的挥发性，易造成空气污染\n·在无氧状态下，很难被生物降解。在有氧状态下降解半衰期为6～20天\n",
-    "typeName": "炼油化工常见危险化学品",
-    "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少50m，下风向疏散至少300m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离800m。\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处\n·进入密闭空间之前必须先通风\n",
-    "type": 24,
-    "dangerCombustionExplosion": "·易燃，蒸气可与空气形成爆炸性混合物，遇明火、高热能引起燃烧爆炸\n·若遇高热，容器内压增大，有开裂或爆炸的危险\n·蒸气比空气重，能在较低处扩散到相当远的地方，遇火回燃\n",
-    "lastEditUserId": 1,
-    "lastEditUserName": "管理员",
-    "emergencyFire": "注意：闪点很低，用水灭火无效。\n灭火剂：干粉、二氧化碳、泡沫。\n·不得使用直流水扑救\n·在确保安全的前提下，将容器移离火场\n储罐、公路、铁路、槽车火灾\n·尽可能远距离灭火或使用车载炮或移动水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象  \n·切勿在储罐两端停留\n",
-    "characteristic": "无色透明非极性液体，有强烈芳香味。微溶于水。与硝酸、浓硫酸、高锰酸钾等氧化剂反应。\n·熔点：5.5℃\n·沸点：80.1℃\n·相对密度：0.88\n·闪点：-11℃\n·爆炸极限：1.2％～8.0％\n·临界温度：288.94℃\n·饱和蒸汽压：179.19kPa（100℃）\n",
-    "uploadUser": null,
-    "path": "",
-    "uploadDate": null,
-    "chemicalFormula": "分子式C6H6\n",
-    "name": "苯",
-    "id": 32,
-    "individualProtection": "·佩戴正压式空气呼吸器\n·穿重型防化服\n",
-    "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·喷雾状水稀释挥发的蒸气\n·作业时所有设备应接地\n·构筑围堤或挖沟槽收容泄漏物，防止进人水体、下水道、地下室或限制性空间\n·用泡沫覆盖泄漏物，减少挥发\n·用砂土或其他不燃材料吸收泄漏物\n·如果储罐发生泄漏，可通过倒罐转移尚末泄漏的液体\n",
-    "createDate": "2018-09-07 14:38:43"
-  }
+    {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：脱去污染的衣着，用清水彻底冲洗皮肤\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗\n·吸入：迅速脱离现场至空气新鲜处：就医\n·食入：饮足量温水，催吐。就医",
+        "specialWarning": "★易燃，其蒸气与空气混合.能形成爆炸性混合物",
+        "dangerBody": "·IDLH:3300ppm[LEL]\n·经消化道和呼吸道吸收，作用于中枢神经系统\n·急性中毒主要见于过量饮酒者，重度中毒可出现昏迷、呼吸衰竭.并可因呼吸麻痹或循环衰竭而死亡\n·吸入高浓度蒸气出现酒醉感、头昏、乏力、兴奋、上呼吸道黏膜刺激症状",
+        "purpose": "是重要的化工原料，广泛用于有机合成、医药、农药等行业。也是重要的溶剂和杀菌、消毒剂。也可作为乙醇汽油组分或添加剂。",
+        "dangerEnvironmental": "·水体中浓度较高时，对水生生物有害\n·易被生物降解",
+        "typeName": "华北油区常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少100m.下风向疏散至少500m。发生大规模泄漏时，初始隔离至少500m.下风向疏散至少1000m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离800m。\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处",
+        "type": 1,
+        "dangerCombustionExplosion": "·蒸气比空气重，能在较低处扩散到相当远的地方，遇火回燃\n·在火场中，受热的容器有爆炸危险",
+        "lastEditUserId": 1,
+        "lastEditUserName": "admin",
+        "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水、抗溶性泡沫、蒸汽。\n·在确保安全的前提下，将容器移离火场\n储罐、公路、铁路、槽车火灾\n·不可能远距离灭火或使用车载炮或移动水炮灭火\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象，立即撤离\n·切勿在储罐两端停留",
+        "characteristic": "·无色透明液体，有酒香和刺激性辛辣味。与水混溶\n·沸点：78.3℃\n·相对密度：0.789\n·闪点：13℃\n·爆炸极限：3.3％～19.0％\n·饱和蒸汽压：5.33kPa（19℃）\n·临界温度：243.1℃",
+        "uploadUser": 1,
+        "filePath": "",
+        "uploadDate": "2018-05-15 08:28:39",
+        "chemicalFormula": "C2H6O",
+        "name": "乙醇",
+        "id": 1,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿隔热服或灭火防护服",
+        "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·作业时所有设备应接地\n·构筑围堤或挖沟槽收容泄漏物，防止进人水体、下水道、地下室或限制性空间\n·用抗溶性泡沫覆盖泄漏物，减少挥发\n·用雾状水溶解稀释挥发的蒸气\n·用砂土或其他不燃材料吸收泄漏物\n·如果储罐发生泄漏，可通过倒罐转移尚未泄漏的液体",
+        "createDate": "2018-05-01 08:28:29"
+    }, {
+        "fileName": "柴油.xls",
+        "emergencyFirstAid": "·皮肤接触：脱去受污染的衣服，用清水彻底冲洗皮肤。就医\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难.给输氧。呼吸心跳停止，立即进行心肺复苏术。就医\n·食入：催吐。2％碳酸氢钠洗胃，硫酸镁导泻。就医\n·解毒剂：口服乙醇或静脉输乙醇、碳酸氢钠、叶酸、4-甲基吡唑\n",
+        "specialWarning": " ★易燃，其蒸气与空气混合，能形成爆炸性混合物",
+        "dangerBody": "具有刺激作用。皮肤接触柴油可引起接触性皮炎，油性痤疮，吸入可引起吸入性肺炎。柴油废气可引起眼、鼻刺激症状、头晕及头痛",
+        "purpose": "用作柴油机的燃料",
+        "dangerEnvironmental": "水体中浓度较高时，对水生生物有害",
+        "typeName": "华北油区常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少100m，下风向疏散至少500m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。",
+        "type": 1,
+        "dangerCombustionExplosion": "易挥发，易爆炸，蒸气比空气重，在低洼处聚焦，遇火回燃。",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：雾状水、泡沫。\n·用大量水冷却容器，直至火灾扑灭\n·备足泡沫，一次性灭火。灭火后持续冷却。\n·筑堤收容消防污水以备处理，不得随意排放。\n·容器突然发出异常声音或发生异常现象，立即撤离。\n",
+        "characteristic": "·稍有粘性的浅黄至棕色液体，不溶于水\n·沸点：282℃～382℃\n·相对密度：0.87～0.9\n·闪点：38℃～54℃\n·爆炸极限：5.3％～32％\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": null,
+        "name": "柴油",
+        "id": 2,
+        "individualProtection": "佩戴正压式空气呼吸器，穿防静电服，着火时穿隔热服或灭火防护服\n",
+        "emergencyLeakage": "·消除点火源，疏散警戒\n·采取关阀、倒罐、堵漏的工艺措施\n·筑堤、挖沟收容泄漏物，防止进入水体、下水道或雨排系统\n·泡沫覆盖，减少挥发\n·少量泄漏用砂土或其他不燃材料吸收泄漏物\n",
+        "createDate": "2018-08-30 11:01:44"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：立即脱去污染的衣着，用清水彻底冲洗皮肤。就医\n·眼睛接触：立即提起眼睑，用大量流动清水彻底冲洗10～15min。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医。\n·食入：饮水，禁止催吐。就医。",
+        "specialWarning": "★高度易燃，其蒸气与空气混合，能形成爆炸性混合物\n★注意：闪点很低，用水灭火无效\n★不得使用直流水扑救\n",
+        "dangerBody": "·麻醉性毒物\n·高浓度吸入汽油蒸气引起急性中毒，表现为中毒性脑病，出现精神症状、意识障碍。极高浓度吸入引起意识突然丧失、反射性呼吸停止。误将汽油吸入呼吸道可引起吸入性肺炎\n·皮肤较长时间接触引起灼伤，个别发生急性皮炎\n·慢性中毒可引起周围神经病、中毒性脑病、肾脏损害。可致皮肤损害",
+        "purpose": "主要用作汽油机的燃料，溶剂汽油则用于橡胶、油漆、油脂、香料等工业。",
+        "dangerEnvironmental": "·在很低的浓度下就能对水生生物造成危害\n·在土壤中具有极强的迁移性\n·具有一定的生物富集性\n·在低浓度时能生物降解；在高浓度时，可使微生物中毒，不易被生物降解\n",
+        "typeName": "华北油区常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少50m，下风向疏散至少300m。发生大量泄漏时，初始隔离至少500m，下风向疏散至少1000m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离800m。\n考虑撤离隔离区内的人员、物资\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处\n·进入密闭空间之前必须先通风",
+        "type": 1,
+        "dangerCombustionExplosion": "·蒸气比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n·高度易燃，蒸气与空气混合可形成爆炸性混合物，遇明火、高热\n·流速过快，容易产生和积聚静电\n·在火场中，受热的容器有爆炸危险\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "注意：闪点很低，用水灭火无效。\n  灭火剂：干粉、二氧化碳、泡沫。\n·不得使用直流水扑救\n·在确保安全的前提下，将容器移离火场\n储罐、公路、铁路槽车火灾\n·尽可能远距离灭火或使用车载炮或移动水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象，立即撤离\n·切勿在储罐两端停留",
+        "characteristic": "·无色到浅黄色的透明液体\n·相对密度：0.70～0.80\n·闪点：-58℃～l0℃\n·爆炸极限：1.4％～7.6％",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": null,
+        "name": "汽油",
+        "id": 3,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿轻型防化服",
+        "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·作业时所有设备应接地\n·构筑围堤或挖沟槽收容泄漏物，防止进入水体、下水道、地下室或限制性空间\n·用泡沫覆盖泄漏物，减少挥发\n·用砂土或其他不燃材料吸收泄漏物\n·如果储罐发生泄漏，可通过倒罐转移尚未泄漏的液体\n·如果海上或水域发生溢油事故，可布放围油栏引导或遏制溢油，防止溢油扩散，使用撇油器、吸油棉或消油剂清除溢油\n",
+        "createDate": "2018-08-30 14:20:10"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：立即脱去污染的衣着，用清水彻底冲洗皮肤。就医\n·眼睛接触：立即提起跟睑，用流动清水或生理盐水冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n·食入：饮水，禁止催吐。就医",
+        "specialWarning": "★易燃．其蒸气与空气混合，能形成爆炸性混合物\n★注意：闪点很低.用水灭火无效\n★不得使用直流水扑救",
+        "dangerBody": "·IDLH:1100ppm[LFL]\n·具有刺激性和中枢神经系统抑制作用\n·可引起眼和上呼吸道刺激症状。蒸气浓度过高，可引起呼吸困难、紫绀等缺氧症状",
+        "purpose": "用作重整原料、乙烯裂解原料、制氢原料、化工原料以及车用汽油的调合组分；也可用作溶剂；可分离出多种有机原料，如汽油、苯、煤油、沥青等。",
+        "dangerEnvironmental": "·对水生生物有害\n·在土壤中具有极强的迁移性\n·有中等程度的生物富集性\n·可被生物降解，但长时间接触，对污泥微生物有害",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少l00m，下风向疏散至少500m。发生大规模泄漏时，初始隔离至少500m，下风向疏散至少1000m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离\n    火灾：火场内如有储罐、槽车或罐车，隔离800m。\n考虑撤离隔离区内的人员、物资\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进人低洼处\n·进入密闭空间之前必须先通风",
+        "type": 24,
+        "dangerCombustionExplosion": "·易燃，蒸气与空气可形成爆炸性混合物，遇明火高热极易燃烧爆炸\n·蒸气比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n·流速过快，容易产生和积聚静电\n·在火场中，受热的容器有爆炸危险",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "注意：闪点很低，用水灭火无效。\n  灭火剂：干粉、二氧化碳、泡沫。\n·不得使用直流水扑救\n·在确保安全的前提下，将容器移离火场\n储罐、公路/铁路槽车火灾\n·尽可能远距离灭火或使用车载炮或移动水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象，立即撤离\n·切勿在储罐两端停留",
+        "characteristic": "无色或浅黄色液体，有特殊气味。根据其用途不同，终馏点的切割温度各不相同，一般不高于220℃。不溶于水，溶于多数有机溶剂。禁配物：强氧化剂。\n·相对密度：0.63～0.76\n·爆炸极限：1.1％～8.7％",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": null,
+        "name": "石脑油",
+        "id": 6,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿灭火防护服或隔热服",
+        "emergencyLeakage": "·消除所有点火源（泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n  ·使用防爆的通讯工具\n  ·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·作业时所有设备应接地\n  ·构筑围堤或挖沟槽收容泄漏物，防止进人水体、下水道、地下室或限制性空间\n·用泡沫覆盖泄漏物，减少挥发\n·用砂土或其他不燃材料吸收泄漏物\n·如果储罐发生泄漏，可通过倒罐转移尚未泄漏的液体\n·如果海上或水域发生溢油事故，可布放围油栏引导或遏制溢油，防止溢油扩散，使用撇油器、吸油棉或消油剂清除溢油",
+        "createDate": "2018-08-30 14:59:53"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·眼睛接触：立即提起眼睑，用大量流动清水或生理盐水彻底冲洗l0～15min。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医。高压氧治疗",
+        "specialWarning": "★有毒，是强烈的神经毒物，对黏膜有强烈刺激作用\n★高浓度吸入可发生猝死\n★极易燃\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰",
+        "dangerBody": "·窒息性气体，是一种强烈的神经毒物，对眼和呼吸道有刺激作用\n·急性中毒出现眼和呼吸道刺激症状，急性气管、支气管炎或支气管周围炎，支气管肺炎，意识障碍等。重者意识障碍程度达深昏迷或呈植物状态，出现肺水肿、心肌损害、多脏器衰竭。眼部刺激引起结膜炎和角膜损害\n·H2S浓度单位对应关系：1ppm=1.5mg/m3\n·H2S的阈限值为10ppm；（几乎所有工作人员长期暴露都不会产生不利影响的某种有毒物质在空气中的最大浓度）\n·H2S的安全临界浓度（工作人员在露天安全工作8h可接受的最高浓度）为20ppm ；超过20ppm，进入现场要佩戴正压式空气呼吸器，要在主要下风口100m进行监测；\n·50ppm只允许接触10分钟；主要下风口100m测得浓度超过50ppm，周围居民转移；\n·H2S的危险临界浓度为100ppm；（达到此浓度对生命和健康会产生不可逆转的或延迟性的影响）",
+        "purpose": "主要用于制取硫磺。也用于制造硫酸、金属硫化物以及分离和鉴定金属离子。",
+        "dangerEnvironmental": "·对水生生物有很强的毒性作用\n·危险的空气污染物",
+        "typeName": "华北油区常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少500m，下风向疏散至少1500m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。小量泄漏，初始隔离30m，下风向疏散白天100m、夜晚100m；大量泄漏，初始隔离600m，下风向疏散白天3500m、夜晚8000m。\n火灾：火场内如有槽车或罐车，隔离1600m。\n·疏散无关人员并划定警戒区，严格限制非救援人员出入\n·气体比空气重，可沿地面扩散，并在低洼处或限制性空间(如下水道、地下室等)",
+        "type": 1,
+        "dangerCombustionExplosion": "·极易燃，与空气混合能形成爆炸性混合物，遇明火、高热能引起燃烧爆炸\n·气体比空气重，能在较低处扩散到相当远的地方，遇火回燃",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水、泡沫。\n·若不能切断泄漏气源，则不得扑灭正在燃烧的气体\n·小火：采用干粉、CO2、水幕或泡沫灭火\n·大火：采用水幕、雾状水或常规泡沫灭火，用大量水冷却容器，直至火灾扑灭\n·储罐火灾：利用固定式水炮、移动水炮等冷却燃烧罐及与其相邻的储罐，重点应是受火势威胁的一面，直至火灾扑灭\n·流淌火喷射泡沫（抗溶性泡沫）进行覆盖灭火\n·安全阀发生声响或储罐变色时，立即撤离",
+        "characteristic": "·无色气体，有特殊的臭味（臭蛋味)，高浓度时，使嗅觉迅速失灵而闻不到气味。溶于水。与碱发生放热中和反应\n·气体相对密度：1.19\n·爆炸极限：4.0％～46.0％\n·饱和蒸汽压：2026.5kPa（25.5℃）\n·临界温度：100.14℃",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式H2S",
+        "name": "硫化氢",
+        "id": 8,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿重型防化服",
+        "emergencyLeakage": "·将泄漏污染区人员迅速撤离至上风处，并立即进行隔离\n·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·合理通风，加速扩散，并喷雾状水稀释、溶解，禁止用水直接冲击泄漏物或泄漏源\n·在确保安全的情况下，采用关阀、堵漏等措施，切断泄漏源\n·如果泄漏无法控制，可考虑引燃泄漏物以减少有毒气体扩散\n·构筑围堤或挖坑，收容产生的大量废水，进行无害化处理，避免产生环境污染",
+        "createDate": "2018-08-30 15:28:42"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：如果发生冻伤，将患部浸泡于保持在38℃～42℃的温水中复温。不要涂擦。不要使用热水或辐射热。使用清洁、干燥的敷料包扎。就医\n·吸入：迅速脱离现场至空气薪鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医",
+        "specialWarning": "★极易燃\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰",
+        "dangerBody": "·吸入有毒，有麻醉作用\n·急性液化气轻度中毒主要表现为头昏、头痛、咳嗽、食欲减退、乏力、失眠等；重者失去知觉，小便失禁、呼吸变浅变慢\n·液化石油气发生泄漏时会吸收大量的热量造成低温，引起皮肤冻伤",
+        "purpose": "用作民用燃料、发动机燃料、加热炉燃料以及打火机的气体燃料，亦用作乙烯或制氢原料、化工原料。",
+        "dangerEnvironmental": "·污染空气",
+        "typeName": "华北油区常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少100m，下风向疏散至少800m。发生大规模泄漏时，初始隔离至少500m，下风向疏散至少1500m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离1600m。\n·疏散无关人员并划定警戒区\n·气体比空气重，可沿地面扩散，在低洼处聚集",
+        "type": 1,
+        "dangerCombustionExplosion": "·极易燃，蒸气与空气可形成爆炸性混合物，遇明火、高热极易燃烧爆炸\n·蒸气比空气重，能在较底处扩散到相当远的地方，遇火源会着火回燃\n·在火场中，受热的容器有爆炸危险",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：干粉、二氧化碳、水。\n·气瓶火灾，及时将气瓶移至安全地带\n·采取放空、泄压、倒罐等工艺措施\n·用大量水冷却着火罐和相邻储罐，直至火灾扑灭\n·干粉或雾状水灭火\n·储罐若发生异常变化或发出异常声音，须马上撤离；严禁在卧式储罐两端停留",
+        "characteristic": "·常温下加压而液化的石油气，主要组分为丙烷、丙烯、丁烷、丁烯，并含有少量戊烷、戊烯和微量硫化氢杂质：不溶于水\n·气体相对密度：l.5～2.0\n·爆炸极限：5％～33％",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": null,
+        "name": "液化石油气",
+        "id": 9,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿轻型防化服\n·处理液化气体时，应穿防寒服",
+        "emergencyLeakage": "·泄漏后迅速气化，周边将降温，并结冰成霜\n·消除点火源；采取关阀、堵漏、倒罐等工艺措施\n·雾状水驱散、稀释沉积漂浮的气体，禁止使用直流水，以免强水流冲击产生静电\n·防止气体通过下水道、通风系统扩散或进入限制性空间\n·如果储罐底部发生泄漏，可通过排污阀向罐内适量注水，抬高液位，造成罐内底部水垫层\n·如果泄漏无法控制，可考虑点燃，保持其稳定燃烧",
+        "createDate": "2018-08-30 15:50:04"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": null,
+        "specialWarning": "★极易燃\n★经压缩或加热可造成爆炸\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n★火场温度下易发生危险的聚合反应\n",
+        "dangerBody": "·具有弱麻醉作用，麻醉恢复快，无后作用\n·高浓度吸入可引起单纯窒息",
+        "purpose": "上个19块8     52块钱，账单显示150",
+        "dangerEnvironmental": "·水体中浓度较高时，对水生生物有害",
+        "typeName": "华北油区常见危险化学品",
+        "emergencyQuarantine": null,
+        "type": 1,
+        "dangerCombustionExplosion": "·爆炸范围非常宽，极易燃烧爆炸\n·能与空气形成爆炸性混合物\n·对撞击和压力敏感\n·遇明火、高热和氧化剂有燃烧、爆炸危险\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": null,
+        "characteristic": "15532810525最近3个月月租98，500   老版",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式C2H2",
+        "name": "乙炔",
+        "id": 10,
+        "individualProtection": null,
+        "emergencyLeakage": null,
+        "createDate": "2018-08-30 20:02:57"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：脱去污染的衣着，用清水彻底冲洗皮肤。就医\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗。就医\n·吸入：脱离现场至空气新鲜处。如呼吸困难，给输氧。就医\n·食入：尽快彻底洗胃。就医\n",
+        "specialWarning": "★易发生沸溢、喷溅\n★易燃，其蒸气与空气混合，能形成爆炸性混合物\n",
+        "dangerBody": "·原油在分馏、裂解和深加工过程中的产品和中间产品表现出不同的毒性",
+        "purpose": "主要用于生产汽油、航空煤油、柴油等发动机燃料以及液化气、石脑油、润滑油、石蜡、沥青、石油焦等，通过其馏分的高温热解，还用于生产乙烯、丙烯、丁烯等基本有机化工原料。\n",
+        "dangerEnvironmental": "·会在水面形成油膜层，对水生生物和水禽有很大的危害",
+        "typeName": "华北油区常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少50m，下风向疏散至少300m。发生大量泄漏时，初始隔离至少300m，下风向疏散至少1000m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离800m。\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处\n",
+        "type": 1,
+        "dangerCombustionExplosion": "·蒸气比空气重，能在较低处扩散到相当远的地方，遇火回燃\n·流速过快，容易产生和积聚静电\n·在火场中，受热的容器有爆炸危险",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：干粉、泡沫、雾状水。\n·分清储罐类型，燃烧的形式，采取相应的灭火措施\n·一次备足灭火用泡沫，灭火后持续实施冷却\n·如有流淌火，先灭流淌火，再灭装置或储罐火\n·优先选用固定、半固定消防设施，实施灭火、冷却\n·用大量水冷却着火罐和相邻储罐，直至火灾扑\n·着火油罐出现沸溢、喷溅前兆时，应立即撤离\n",
+        "characteristic": "·黄色、褐色乃至黑色的可燃性黏稠液体。不溶于水\n·沸点：从常温到500℃以上\n·相对密度：0.8～1.0\n·闪点：-20℃～100℃\n·爆炸极限：1.1％～8.7％\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": null,
+        "name": "原油",
+        "id": 11,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿隔热服或灭火防护服\n",
+        "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火)\n·采取关阀断料、堵漏，输转、倒罐等工艺措施\n·关闭雨排，筑堤或挖沟收容泄漏物，防止进入水体、下水道、雨排\n·用泡沫覆盖泄漏物，减少挥发\n",
+        "createDate": "2018-09-03 14:49:19"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：如果发生冻伤，将患部浸泡于保持在38～42℃的温水中复温。不要涂擦。不要使用热水或辐射热。使用清洁、干燥的敷料包扎。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
+        "specialWarning": "★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n★极易燃",
+        "dangerBody": "·吸入后可引起急性中毒。轻者出现头痛、头昏、胸闷、呕吐、乏力等。重者出现昏迷、口唇紫绀抽搐。部分中毒者出现心律失常\n·皮肤接触液化气体可引起冻伤\n",
+        "purpose": "干气一般用作民用燃料、锅炉燃料或制氢、合成氨、甲醇、碳黑等的原料。湿气可作裂解原料，制取乙烯、丙烯等，还可从中回收凝析汽油。",
+        "dangerEnvironmental": "·根据其成分的不同，对环境可能产生不同程的有害影响",
+        "typeName": "华北油区常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少100m，下风向疏散至少800m。大口径输气管线泄漏时，初始隔离至少1000m，下风向疏散至少1500m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离1600m。\n考虑撤离隔离区内的人员、物资\n·疏散无关人员并划定警戒区\n·在上风处停留\n",
+        "type": 1,
+        "dangerCombustionExplosion": "·极易燃，与空气混合能形成爆炸性混合物，遇热源和明火有燃烧爆炸的危险",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：干粉、雾状水、高倍数泡沫、二氧化碳。\n·泄漏后急速气化，形成蒸气云团，切忌用直流水扑救，防止发生迸溅\n·若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n·尽可能远距离灭火，槽车着火，冷却着火部位罐体，其它部位不能用水冷却\n·灭火后期，使用氮气等惰性气体置换，防止发生回火爆炸\n·容器突然发出异常声音或发生异常现象，立即撤离\n家用天然气小区调压箱进口压力0.2MPa，入户压力0.02MPa。\n家用天然气为低烃混合物，主要成分为甲烷。\n灭火剂：水（水流切封）、干粉、蒸气、氮气及二氧化碳。\n·断源灭火，切断着火源，使燃烧终止。若不能切断泄漏气源，则不允许熄灭泄漏处的火焰，防止气体外溢，发生二次着火爆炸事故\n·窒息灭火，对气压不大的漏气火灾，可用湿棉被、湿麻袋、湿布、湿棉毡、黏土封住着火口隔绝空气，使火熄灭。在关阀堵漏时，必须严格执行操作规程和动火规定，避免造成二次着火爆炸\n",
+        "characteristic": "·天然气的主要成分是甲烷(CH4)，无色气体，当混有硫化氢时，有强烈的刺鼻臭味。不溶于水\n·CNG（压缩天然气）无色、无味，由液相变为气相体积扩大约250倍\n· LNG（液化天然气）无色、无味，是天然气在经净化及超低温状态下（-163℃、一个大气压）冷却液化的产物，由液相变为气相体积扩大约600倍 \n·沸点-161.5℃\n·熔点-182.5℃\n·爆炸极限：5.0％～15％\n·饱和蒸气压（kpa): 53.32kPa(-168.8℃)\n·自燃温度537℃\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": null,
+        "name": "天然气",
+        "id": 12,
+        "individualProtection": "·泄漏状态下穿防静电服、佩戴正压式空气呼吸器，使用无火花工具\n·穿轻型防化服\n·处理液化气体时，应穿防寒服",
+        "emergencyLeakage": "·消除所有点火源（泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆通讯工具\n·LNG泄漏用高倍数泡沫覆盖，在下风或侧风方向设置不少于两层弧形水幕墙，稀释蒸汽云团\n·在确保安全的情况下采取关阀、堵漏等措施，切断泄漏源\n·天然气和CNG泄漏用雾状水稀释、驱散\n·大量泄漏，无法控制时，远程点燃，控制其稳定燃烧\n",
+        "createDate": "2018-09-06 09:54:13"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：立即脱去污染的衣着，用清水彻底冲洗皮肤。就医\n·眼睛接触：立即提起眼睑，用大量流动清水彻底冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处：保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n·食入：饮水，禁止催吐。就医\n",
+        "specialWarning": "★易燃，其蒸气与空气混合，能形成爆炸性混合物",
+        "dangerBody": "·直接将溶剂油吸人肺内，或在通风不良的情况下吸入其高浓度油雾，均可引起化学性肺炎",
+        "purpose": "主要用作溶剂。70号溶剂油用作香花香料及油脂工业作抽提溶剂；90号溶剂油用作化学试剂、医药溶剂等；120号溶剂油用于橡胶工业作溶剂；190号溶剂油用于机械零件的洗涤和工农业生产作溶剂；200号溶剂油用于涂料工业作溶剂和稀释剂：260号溶剂油为煤油型特种溶剂，可用于矿石的萃取等。\n",
+        "dangerEnvironmental": "·对水生生物有害",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少50m，下风向疏散至少300m。发生大量泄漏时，初始隔离至少500m.下风向疏散至少1000m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离800m，疏散无关人员并划定警戒区。\n考虑撤离隔离区内的人员、物资、疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处\n·进入密闭空间之前必须先通风\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·易燃，蒸气与空气可形成爆炸性混合物，遇明火、高热极易燃烧爆炸\n·蒸气比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n·流速过快，容易产生和积聚静电\n·在火场中，受热的容器有爆炸危险\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水、泡沫。\n·不得使用直流水扑救\n·在确保安全的前提下，将容器移离火场\n储罐、公路、铁路、槽车火灾\n·尽可能远距离灭火或使用车载炮或移动水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象，立即撤离\n·切勿在储罐两端停留\n",
+        "characteristic": "无色或浅黄色液体，不溶于水，溶于多数有机溶剂。\n·沸点：20℃～160℃\n·相对密度：0.78～0.97\n·引燃温度：350℃\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": null,
+        "name": "溶剂油",
+        "id": 13,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿灭火防护服、隔热服、轻型防化服",
+        "emergencyLeakage": "·消除所有点火源（泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·作业时所有设备应接地\n·构筑围堤或挖沟槽收容泄漏物．防止进入水体、下水道、地下室或限制性空间\n·用泡沫覆盖泄漏物，减少挥发\n·用砂土或其他不燃材料吸收泄漏物\n·如果储罐发生泄漏，可通过倒罐转移尚未泄漏的液体\n·如果海上或水域发生溢油事故，可布放围油栏引导或遏制溢油，防止溢油扩散，使用撇油器、吸油棉或消油剂清除溢油\n",
+        "createDate": "2018-09-06 10:00:19"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：立即脱去污染的衣着，应用2％硼酸液或大量清水彻底冲洗。就医\n·眼睛接触：立即提起眼睑，用大量流动清水或生理盐水彻底冲洗10～15min。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
+        "specialWarning": "★吸入可引起中毒性肺水肿。可致眼、皮肤和呼吸道灼伤；\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰；\n★处理液氨时，应穿防寒服。",
+        "dangerBody": "·IDLH:300ppm\n·具有强烈的刺激性，对眼和呼吸道有强烈刺激和腐蚀作用\n·急性氨中毒引起眼和呼吸道刺激症状，支气管炎或支气管周围炎，肺炎，重度中毒者可发生中毒性肺水肿。可因喉头水肿和呼吸道黏膜坏死脱落引起窒息。高浓度氨可引起反射性呼吸和心搏停止；可致眼和皮肤灼伤\n",
+        "purpose": "主要用于生产化肥、硝酸、铵盐、胺类。也用于药物、染料的生产。也常用作致冷剂。\n",
+        "dangerEnvironmental": null,
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少200m，下风向疏散至少1000m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离1600m。考虑撤离隔离区内的人员、物资。\n·疏散无关人员并划定警戒区，\n·在上风处停留\n·进入密闭空间之前必须先通风\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·易燃，能与空气形成爆炸性混合物\n·包装容器受热可发生爆炸\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水、抗溶性泡沫\n·在确保安全的前提下，将容器移离火场\n·禁止将水注人容器\n·毁损钢瓶由专业人员处置\n储罐火灾\n·尽可能远距离灭火或使用车载炮或水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·禁止向泄漏处和安全装置喷水，防止结冰\n·容器突然发出异常声音或发生异常现象，立即撤离\n·切勿在储罐两端停留\n",
+        "characteristic": "常温常压下为无色气体，有强烈的刺激性恶臭气味。20℃、891kpa下即可液化， 并放出大量的热。液氨在温度变化时，体积变化的系数很大。极易溶于水。与酸发生放热中和反应。腐蚀钢、铜、黄铜、铝、锡、锌及其合金，水溶液呈碱性。\n·沸点：-33.5℃\n·气体相对密度：0.59\n·爆炸极限：15％～30.2％\n·饱和蒸汽压：882kPa（20℃）\n·临界温度：132℃。\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式NH3 ",
+        "name": "液氨",
+        "id": 14,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿重型防化服\n·处理液氨时，应穿防寒服\n",
+        "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·作业时所有设备应接地\n·防止气体通过通风系统扩散或进人限制性空间\n·喷雾状水溶解、稀释漏出气\n·如果钢瓶发生泄漏，无法关闭时可浸入水中\n·高浓度泄漏区，喷稀盐酸吸收\n·隔离泄漏区直至气体散尽\n",
+        "createDate": "2018-09-06 10:23:22"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：脱去污染的衣着，脱离现场。就医。避免阳光照射。\n·眼睛接触：立即翻开上下眼睑，用流动清水冲洗至少15分钟。就医。\n·吸入：脱离现场至空气新鲜处。就医。\n·食入：误服者给饮足量温水，催吐。就医。\n",
+        "specialWarning": "★具有刺激性，致癌性\n★燃烧分解时放出腐蚀性、刺激性的黑色烟雾",
+        "dangerBody": "·沥表及其烟气对皮肤粘膜具有刺激性，有光毒作用和致肿瘤作用\n",
+        "purpose": "用于涂料、塑料、橡胶等工业以及铺筑路面等。\n",
+        "dangerEnvironmental": "·燃烧(分解)产物：一氧化碳、二氧化碳、成分未知的黑色烟雾\n",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": null,
+        "type": 24,
+        "dangerCombustionExplosion": "·遇高热、明火能燃烧",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：雾状水、泡沫、二氧化碳、干粉、砂土。\n",
+        "characteristic": "黑色液体，半固体或固体，不溶于水，不溶于丙酮、乙醚、稀乙醇等，溶于四氯化碳。\n·沸点：<470℃\n·相对密度：1.15～1.25\n·闪点：204.4℃\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": null,
+        "name": "沥青",
+        "id": 15,
+        "individualProtection": "·高浓度含量时佩戴正压式空气呼吸器\n·眼睛防护：一般不需特殊防护，高浓度接触时可戴安全防护眼镜\n",
+        "emergencyLeakage": "收集回收或无害处理后废弃。\n",
+        "createDate": "2018-09-06 15:38:49"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：如果发生冻伤，将患部浸泡于保持在38℃-42℃的温水中复温。不要涂擦。不要使用热水或辐射热。使用清洁、干燥的敷料包扎。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
+        "specialWarning": "★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n\n",
+        "dangerBody": "·甲烷对人基本无毒，但浓度过高时，使空气中氧气含量明显降低，使人窒息。当空气中甲烷达到25%～30%时，可引起头痛、头晕、乏力、注意力不集中、呼吸和心跳加快。若不及时脱离，可致窒息死亡\n",
+        "purpose": "广泛用作民用和锅炉燃料。用于制氢气、合成氨和有机合成原料气，也用于制炭黑、硝基甲烷、三氯甲烷等。\n",
+        "dangerEnvironmental": "·在土壤中具有很强的迁移性\n",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下初始隔离至少l00m，下风向疏散至少800m：然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离1600m。\n·疏散无关人员并划定警戒区\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·极易燃，与空气混合能形成爆炸性混合物，遇热源和明火有燃烧爆炸的危险\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：干粉、二氧化碳、水、雾状水。\n·切断气源。若不能立即切断气源，则不允许熄灭正在燃烧的甲烷       \n·小火用干粉灭火器或二氧化碳灭火器灭火，大火用水或雾状水灭火    \n·在确保安全的前提下，把盛有可燃气的容器运离火灾现场   \n·燃烧剧烈的大火，要与火源保持尽可能大的距离或者用遥控水炮;否则撤离火灾现场，让其自行燃尽。若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n·如果容器的安全阀发出声响，或容器变色，应迅速撤离\n",
+        "characteristic": "·无色、无臭、无味气体，微溶于水\n·气体相对密度：0.6\n·爆炸极限：5.0％～16％\n·饱和蒸汽压：53.32kPa（-168.8℃）\n·临界温度：-82.6℃\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式CH4    \n",
+        "name": "甲烷",
+        "id": 17,
+        "individualProtection": "·佩戴正压式空气呼吸器，穿防静电服   \n·着火时，穿隔热服或灭火防护服\n",
+        "emergencyLeakage": "·消除点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·在确保安全的情况下，采用关阀、堵漏等措施，切断泄漏源\n·防止气体通过通风系统扩散或进入限制性空间\n·雾状水稀释泄漏气体\n·隔离泄漏区直至气体散尽\n",
+        "createDate": "2018-09-06 16:20:37"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：如果发生冻伤，将患部浸泡于保持在38～42℃的温水中复温。不要涂擦。不要使用热水或辐射热。使用清洁、干燥的敷料包扎。就医\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
+        "specialWarning": "★极易燃\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n",
+        "dangerBody": "·急性毒性\n·具有弱刺激和麻醉作用\n·吸入高浓度出现头晕、头痛、嗜睡、恶心、酒醉状态\n·皮肤接触液态丁烷可造成冻伤",
+        "purpose": "是有机合成的原料，用于制取丁烯、丁二烯、顺丁烯二酸酐、乙烯、卤代丁烷等。也用作燃料、树脂发泡剂、溶剂、制冷剂等。\n",
+        "dangerEnvironmental": "·具有中等强度的生物富集性\n",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少l00m，下风向疏散至少800m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离1600m。\n·考虑撤离隔离区内的人员、物资\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处\n·气体比空气重，可沿地面扩散，并在低洼处或限制性空间(如下水道、地下室等)聚集\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·极易燃，与空气混合能形成爆炸性混合物，遇热源和明火有燃烧爆炸的危险\n·比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水或泡沫。\n·若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n·在确保安全的前提下，将容器移离火场\n",
+        "characteristic": "无色气体，有轻微的不愉快气味。不溶于水。\n·气体相对密度：2.1\n·爆炸极限：1.5％～8.5％\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式C4H10 \n",
+        "name": "丁烷",
+        "id": 18,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿轻型防化服\n·处理液化气体时，应穿防寒服\n",
+        "emergencyLeakage": "·消除火源，关闭雨排，疏散警戒\n·采用关阀、放空、输转等工艺措施\n·气体比空气重，上风处停留，切勿进入低洼处\n·合理通风，加速扩散。雾状水稀释、溶解\n·失去控制，点燃；控制稳定燃烧\n",
+        "createDate": "2018-09-06 16:55:19"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：脱去污染的衣着，用清水彻底冲洗皮肤。就医\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处：保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n·食入：饮水，禁止催吐。就医\n",
+        "specialWarning": "★高度易燃，其蒸气与空气混合．能形成爆炸性混合物\n★注意：闪点很低，用水灭火无效\n★不得使用直流水扑救\n",
+        "dangerBody": "·IDLH：1500ppm[LEL]\n·高浓度具有轻度刺激和麻醉作用，严重者可发生昏迷\n",
+        "purpose": "是有机合成的原料，用于制取丁烯、丁二烯、顺丁烯二酸酐、乙烯、卤代丁烷等。也用作燃料、树脂发泡剂、溶剂、制冷剂等。\n",
+        "dangerEnvironmental": "·对水生生物有毒性作用，能在水环境中造成长期的有害影响\n·在土壤中具有极强的迁移性\n·有中等程度的生物富集性\n·很难被生物降解\n",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少50m，下风向疏散至少300m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离800m。\n考虑撤离隔离区内的人员、物资\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处\n·进入密闭空间之前必须先通风\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·易燃，蒸气与空气可形成爆炸性混合物，遇明火、高热极易燃烧爆炸\n·蒸气比空气重，能往较低处扩散到相当远的地方，遇火源会着火回燃\n·流速过快，容易产生和积聚静电\n·在火场中，受热的容器有爆炸危险",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "注意：闪点很低，用水灭火无效。\n灭火剂：干粉、二氧化碳、泡沫。\n ·不得使用直流水扑救\n ·在确保安全的前提下，将容器移离火场，储罐、公路、铁路、槽车火灾\n ·尽可能远距离灭火或使用车载炮或移动水炮灭火\n ·用大量水冷却容器，直至火灾扑灭\n ·容器突然发出异常声音或发生异常现象，立即撤离\n",
+        "characteristic": "无色透明的易挥发液体，有微弱的薄荷香味。微溶于水。\n·沸点：36.1℃\n·相对密度：0.63\n·闪点：-49℃\n·爆炸极限：1.7％～9.75％\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式C5H12  ",
+        "name": "戊烷",
+        "id": 19,
+        "individualProtection": "·佩戴全防型滤毒罐\n·穿轻型防化服",
+        "emergencyLeakage": "·消除所有点火源泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·作业时所有设备应接地\n·构筑围堤或挖沟槽收容泄漏物，防止进人水体、下水道、地下室或限制性空间\n·喷雾状水稀释挥发的蒸气\n·用泡沫覆盖泄漏物，减少挥发\n·用砂土或其他不燃材料吸收泄漏物\n·如果储罐发生泄漏，可通过倒罐转移尚未泄漏的液体\n",
+        "createDate": "2018-09-06 17:00:53"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：脱去污染的衣着，用清水彻底冲洗皮肤。就医\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n·食入：饮水，禁止催吐。就医\n",
+        "specialWarning": "★高度易燃，其蒸气与空气混合，能形成爆炸性混合物\n★注意：闪点很低，用水灭火无效\n★不得使用直流水扑救\n",
+        "dangerBody": "·IDLH：1100ppm[LEL]\n·对中枢神经系统有抑制作用。有刺激作用\n·接触蒸气时，可产生眼和上呼吸道刺激症状，严重者可发生肺炎、肺水肿\n·长期接触出现头痛、头晕、乏力、胃纳减退等\n",
+        "purpose": "主要用作橡胶、涂料、油墨、烯烃聚合的溶剂，植物油提取剂，颜料稀释剂。还是高辛烷值燃料。\n",
+        "dangerEnvironmental": "·对水生生物有毒性作用，能在水环境中造成长期的有害影响\n·在土壤中具有很强的迁移性\n·具有很强的生物富集性\n·易挥发，是有害的空气污染物\n·在低浓度时，易被生物降解，但在高浓度时，会造成微生物中毒，影响生物降解能力\n",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少l00m，下风向疏散至少500m：然后进行气体浓度检测，根据有害蒸气的实际浓度调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离800m。\n考虑撤离隔离区内的人员、物资\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进人低洼处\n·进入密闭空间之前必须先通风\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·易燃，蒸气与空气可形成爆炸性混合物，遇明火、高热极易燃烧爆炸\n·蒸气比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n·在火场中，受热的容器有爆炸危险\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "注意：闪点很低，用水灭火无效。\n灭火剂：干粉、二氧化碳、泡沫。\n·不得使用直流水扑救\n·在确保安全的前提下，将容器移离火场\n储罐、公路、铁路、槽车火灾\n·尽可能远距离灭火或使用车载炮或移动水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象，立即撤离\n·切勿在储罐两端停留\n",
+        "characteristic": "·无色易挥发液体，有微弱的特殊气味。不溶于水。能溶解部分塑料、橡胶和涂层\n·沸点：68.74℃\n·相对密度：0.66\n·闪点：-25.5℃\n·爆炸极限：1.2％～6.9％\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式C6H14",
+        "name": "己烷",
+        "id": 20,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿重型防化服\n",
+        "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·作业时所有设备应接地\n·构筑围堤或挖沟槽收容泄漏物，防止进入水体、下水道、地下室或限制性空间\n·用雾状水稀释挥发的蒸气，禁止用直流水冲击泄漏物\n·用泡沫覆盖泄漏物，减少挥发\n·用砂土或其他不燃材料吸收泄漏物\n·如果储罐发生泄漏，可通过倒罐转移尚未泄漏的液体\n",
+        "createDate": "2018-09-06 17:03:01"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：如果发生冻伤，将患部浸泡于保持在38～42％的温水中复温。不要涂擦：不要使用热水或辐射热。使用清洁、干燥的敷料包扎：就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
+        "specialWarning": "★有较强的麻醉作用\n★极易燃\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n★火场温度下易发生危险的聚合反应\n",
+        "dangerBody": "·具有较强的麻醉作用\n·吸入高浓度时可迅速引起意识丧失。吸入新鲜空气后，一般很快清醒\n·皮肤接触液态乙烯可发生冻伤\n",
+        "purpose": "·是合成纤维、合成橡胶、合成塑料的基本化工原料。用于生产聚乙烯、二氯乙烷、氯乙烯、环氧乙烷、乙二醇、苯乙烯、乙苯等\n·也可用作水果、蔬菜的催熟剂\n",
+        "dangerEnvironmental": "·在土壤中具有很强的迁移性\n·可被生物降解\n",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少100m，下风向疏散至少800m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离1600m。\n考虑撤离隔离区内的人员、物资\n·疏散无关人员并划定警戒区\n·在上风处停留\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·极易燃，与空气混合能形成爆炸性混合物，遇明火、高热或与氧化剂接触，有引起燃烧爆炸的危险\n·高温或接触氧化剂能引起燃烧或爆炸性聚合\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水、泡沫。\n·若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n·在确保安全的前提下，将容器移离火场\n储罐火灾\n·尽可能远距离灭火或使用车载炮或移动水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象，立即撤离\n·当大火已经在货船蔓延，立即撤离，货船可能爆炸\n",
+        "characteristic": "·无色气体，带有甜味。不溶于水。有机过氧化物、烷基锂等引发剂存在时，易发生聚合，放出大量的热量\n·气体相对密度：0.98\n·爆炸极限：2.7％～36.0％\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式C2H4\n",
+        "name": "乙烯",
+        "id": 21,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿轻型防化服\n·处理液态乙烯时应穿防寒服\n",
+        "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·作业时所有设备应接地\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·防止气体通过通风系统扩散或进入限制性空间\n·喷雾状水改变蒸气云流向\n·隔离泄漏区直至气体散尽\n",
+        "createDate": "2018-09-06 17:05:06"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医。高压氧治疗\n",
+        "specialWarning": "★有毒，吸入可因人体缺氧而致死\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n",
+        "dangerBody": "·IDLH：1200ppm\n·经呼吸道侵入体内，与血红蛋白结合生成碳氧血红蛋白，使血液携氧能力明显降低，造成组织缺氧\n·急性中毒出现剧烈头痛、头晕、耳鸣、心悸、恶心、呕吐、无力、意识障碍，重者出现深昏迷、脑水肿、肺水肿和心肌损害。血液碳氧血红蛋白浓度升高\n",
+        "purpose": "是合成气（CO、H2）、煤气的主要成分和基本有机化工的重要原料。用于制甲醇、醋酸、DMF、碳酸二甲酯、草酸、甲酸光气、金属羰基化合物等。也用作精炼金属的还原剂。          \n",
+        "dangerEnvironmental": "·在很低的浓度就能对水生生物造成危害\n·是有害的空气污染物\n",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少200m，下风向疏散至少1000m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n    火灾：火场内如有储罐、槽车或罐车，隔离1600m。\n考虑撤离隔离区内的人员、物资\n  ·疏散无关人员并划定警戒区\n  ·在上风处停留\n·进入密闭空间之前必须先通风\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·易燃，在空气中燃烧时火焰为蓝色\n·与空气混合能形成爆炸性混合物，遇明火或高热能引起燃烧爆炸\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水、泡沫。\n·若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n·用大量水冷却临近设备或着火容器，直至火灾扑灭\n·毁损容器由专业人员处置\n",
+        "characteristic": "·无色、无味、无臭气体。微溶于水\n·气体相对密度：0.97\n·爆炸极限：12%～74%\n·沸点：-191.5℃\n·自燃点：608.89℃\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式CO",
+        "name": "一氧化碳",
+        "id": 22,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿轻型防化服\n",
+        "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·作业时所有设备应接地\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏\n·防止气体通过通风系统扩散或进入限制性空间\n·喷雾状水改变蒸汽云流向\n·隔离泄漏区直至气体散尽\n",
+        "createDate": "2018-09-06 17:08:08"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
+        "specialWarning": "★易燃气体\n★与空气混合能形成爆炸性混合物，遇热源和明火有燃烧爆炸的危险\n",
+        "dangerBody": "·有单纯性窒息及麻醉作用\n·人短暂接触1％丙烷，不引起症状；10％以下的浓度，只引起轻度头晕；接触高浓度时可出现麻醉状态、意识丧失；极高浓度时可致窒息\n·液态丙烷可致皮肤冻伤\n",
+        "purpose": "用于做燃料、化工原料。\n",
+        "dangerEnvironmental": "·在土壤中滞留时间长，不易被生物降解\n",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少l00m，下风向疏散至少800m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离1600m；疏散无关人员并划定警戒区。\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·气体比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃或爆炸\n·与氧化剂接触猛烈反应\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：雾状水、泡沫、二氧化碳、干粉。\n·切断气源。若不能切断气源，则不允许熄灭泄漏处的火焰。\n·喷水冷却容器，可能的话将容器从火场移至空旷处\n",
+        "characteristic": "无色气体，纯品无臭。微溶液于水，溶液于乙醇、乙醚。\n·气体相对密度：1.56\n·爆炸极限：2.1％～9.5％\n·临界温度：96.8℃\n·饱和蒸汽压：53.32kpa(-55.6℃)\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式C3H8",
+        "name": "丙烷",
+        "id": 23,
+        "individualProtection": "·佩戴正压式空气呼吸器，穿防静电服   \n·着火时，穿隔热服或灭火防护服\n",
+        "emergencyLeakage": "·消除火源，关闭雨排，疏散警戒\n·采用关阀、放空、输转等工艺措施\n·气体比空气重，上风处停留，切勿进入低洼处\n·合理通风，加速扩散。雾状水稀释、溶解\n·失去控制，点燃；控制稳定燃烧\n",
+        "createDate": "2018-09-06 19:28:37"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：如果发生冻伤，将患部浸泡于保持在38～42℃的温水中复温。不要涂擦。不要使用热水或辐射热。使用清洁、干燥的敷料包扎。就医\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
+        "specialWarning": "★极易燃\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰",
+        "dangerBody": "·有麻醉作用\n·吸入高浓度气体后可产生头昏、乏力，甚至意识丧失。严重中毒时出现血压下降和心律失常\n·皮肤接触液态丙烯可引起冻伤\n",
+        "purpose": "用于生产聚丙烯、乙丙橡胶、丙烯腈、辛醇、异丁醇、异丙苯、丙烯酸、环氧丙烷等。炼油工业中用于制取叠合汽油。\n",
+        "dangerEnvironmental": "·在土壤中具有中等强度的迁移性\n",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少l00m，下风向疏散至少800m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离1600m。\n疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处\n·气体比空气重，可沿地面扩散，并在低洼处或限制性空间(如下水道、地下室等)聚集疏散无关人员并划定警戒区。\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·蒸气比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n·受热能发生聚合反应，甚至导致燃烧爆炸\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水、泡沫。\n·若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n·在确保安全的前提下，将容器移离火场\n储罐火灾\n·尽可能远距离灭火或使用车载炮或移动水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象，立即撤离\n",
+        "characteristic": "无色气体，略带烃类特有的气味。微溶于水。催化剂(酸等)或引发剂(有机过氧化物等)存在时，易发生聚合，放出大量的热量。\n·气体相对密度：1.5\n·爆炸极限：1.0％～15.0％\n·临界温度：91.8℃\n·饱和蒸汽压：588.29kPa（0℃）\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式C3H6 ",
+        "name": "丙烯",
+        "id": 24,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿轻型防化服\n·处理液化丙烯时，应穿防寒服\n",
+        "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·作业时所有设备应接地\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·防止气体通过下水道、通风系统扩散或进入限制性空间\n·喷雾状水改变蒸气云流向\n·隔离泄漏区直至气体散尽\n",
+        "createDate": "2018-09-07 08:48:00"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
+        "specialWarning": "★极易燃\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n",
+        "dangerBody": "·有轻度麻醉和刺激作用，并可引起窒息\n·急性中毒：出现粘膜刺激症状、嗜睡、血压稍升高、心率增快\n·高浓度吸入可引起窒息、昏迷\n",
+        "purpose": "用于制丁二烯、异戊二烯、合成橡胶等。\n",
+        "dangerEnvironmental": "·对环境有危害，对水体、土壤和大气可造成污染\n",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少l00m，下风向疏散至少800m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离1600m；疏散无关人员并划定警戒区。\n\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·蒸气比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n·受热能发生聚合反应，甚至导致燃烧爆炸\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：雾状水、泡沫、二氧化碳、干粉。\n切断气源。若不能切断气源则不允许熄灭泄漏处的火焰。喷水冷却容器可能的话将容器从火场移至空旷处。\n",
+        "characteristic": "无色气体，不溶于水，微溶于苯，易溶于乙醇、乙醚。\n·气体相对密度：1.93\n·爆炸极限：1.6%～10%\n·燃点温度：385℃\n·饱和蒸汽压：189.48(kPa) (10℃)\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式C4H8",
+        "name": "丁烯",
+        "id": 25,
+        "individualProtection": "·呼吸系统：一般不需要特殊防护，高浓度接触时可佩戴正压式空气呼吸器\n·眼睛防护：戴化学安全防护眼镜\n·身体防护：防静电服\n",
+        "emergencyLeakage": "·切断火源\n·尽可能切断泄漏源。用工业覆盖层或吸附/吸收剂盖住泄漏点附近的下水道等地方，防止气体进入\n·合理通风，加速扩散\n·喷雾状水稀释\n",
+        "createDate": "2018-09-07 09:24:27"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：脱去污染的衣着，用清水彻底冲洗皮肤。就医\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难．给输氧。呼吸心跳停止，立即进行心肺复苏术。就医\n·食入：催吐。2％碳酸氢钠洗胃，硫酸镁导泻。就医\n·解毒剂：口服乙醇或静脉输乙醇、碳酸氢钠、叶酸、4-甲基吡唑\n",
+        "specialWarning": "★易燃．其蒸气与空气混合，能形成爆炸性混合物\n★吸入煤油蒸气引起中毒反应\n",
+        "dangerBody": "·急性中毒：吸入高浓度煤油蒸气，常先有兴奋，后转入抑制，表现为乏力、头痛、酩酊感、神志恍惚、肌肉震颤、共济运动失调；严重者出现定向力障碍、谵妄、意识模糊等；蒸气可引起眼及上呼吸道刺激症状；吸入液态煤油可引起吸入性肺炎；摄入口腔、咽喉和胃肠道刺激症状\n·慢性影响：神经衰弱征候群为主要表现，还有眼及呼吸道刺激症状，接触性皮炎、干燥等皮肤损害\n",
+        "purpose": "用作燃料、溶剂、杀虫喷雾剂。\n",
+        "dangerEnvironmental": "·水体中浓度较高时．对水生生物有害\n",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少100m，下风向疏散至少500m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离800m。\n考虑撤离隔离区内的人员、物资\n  ·疏散无关人员并划定警戒区\n  ·在上风处停留，切勿进入低洼处\n  ·进入密闭空间之前必须先通风\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·易燃，蒸气与空气可形成爆炸性混合物，遇明火、高热能引起燃烧爆炸\n·蒸气比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：雾状水、抗溶性泡沫。\n·在确保安全的前提下，将容器移离火场\n·筑堤收容消防污水以备处理，不得随意排放\n·尽可能远距离灭火或使用车载炮或移动水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象，立即撤离\n·切勿在储罐两端停留\n",
+        "characteristic": "·水白色至淡黄色流动性油状液体，易挥发，不溶于水\n  ·沸点：175～325℃\n  ·相对密度：0.8～1.0\n  ·闪点：43～72℃\n·爆炸极限：0.7％～5.0％\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式C3H6 \n",
+        "name": "煤油",
+        "id": 26,
+        "individualProtection": "·佩戴正压式空气呼吸器\n  ·穿轻型防化服\n",
+        "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·作业时所有设备应接地\n·构筑围堤或挖沟槽收容泄漏物，防止进入水体、下水道、地下室或限制性空间\n·用抗溶性泡沫覆盖泄漏物，减少挥发\n·用雾状水稀释泄漏物挥发的蒸气\n·用砂土或其他不燃材料吸收泄漏物\n·如果储罐发生泄漏，可通过倒罐转移尚未泄漏的液体\n",
+        "createDate": "2018-09-07 09:29:08"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：如果发生冻伤，将患部浸泡于保持在38℃～42℃的温水中复温。不要涂擦。不要使用热水或辐射热。使用清洁、干燥的敷料包扎。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
+        "specialWarning": "★极易燃\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n",
+        "dangerBody": "·吸入高浓度时，由于窒息和麻醉作用可引起人在短时间内死亡，死亡多为心脏停搏或呼吸麻痹，长期接触引起神经系统功能障碍，尤其是植物神经系统功能障碍\n·皮肤接触液化气引起冻伤\n",
+        "purpose": "用作燃料和用于炭黑、氢、乙炔、甲醛等的制造。\n",
+        "dangerEnvironmental": "·在土壤中滞留时间长，不易被生物降解\n",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下劫始隔离至少l00m，下风向疏散至少800m：然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离1600m。\n·在上风处停留\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·与空气混合能形成爆炸混合物，遇明火、高热能引起燃烧爆炸\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：干粉、二氧化碳、雾状水、泡沫。\n·采取关阀断料、泄压、放空等工艺措施\n·当现场有流淌火时，可采取筑堤堵截、分割合击、逐片消灭的方法\n·对相邻装置和设备进行充分冷却，采取工艺处置后，在条件允许的情况下可用蒸汽、干粉、雾状水等灭火剂灭火\n·灭火后充分利用雾状水对气体进行稀释，协助工程抢险人员实施作业\n·注意观察表力压，保持系统处于正压状态，防止回火引起管线、设备爆炸\n·系统突然发出异常声音或发生异常现象，立即撤离\n",
+        "characteristic": "无色、无臭、无味气体，不溶于水。\n·气体相对密度：0.55\n·爆炸极限：1.0％～1.5％\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": null,
+        "name": "干气",
+        "id": 27,
+        "individualProtection": "·泄漏状态下佩戴正压式空气呼吸器，防静电服    \n·灭火时穿隔热服或避火服\n",
+        "emergencyLeakage": "·消除火源，疏散警戒\n·泄漏量小时，利用雾状水、蒸汽、氮气稀释、驱散\n·较大泄漏量时，可点燃，控制其稳定燃烧\n·打开放空系统，实施远程点燃\n",
+        "createDate": "2018-09-07 09:44:07"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
+        "specialWarning": "★可燃物\n\n",
+        "dangerBody": "·本身无毒， 注意不同添加剂的毒性\n·热解产物酸、醛等对眼、上呼吸道有刺激作用\n",
+        "purpose": "可用作工程塑料， 适用于制电视机、收音机外壳、电器绝缘材料、防腐管道、板材、贮槽等， 也用于编织包装袋、包装薄膜。\n",
+        "dangerEnvironmental": null,
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少l00m，下风向疏散至少800m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有槽车或罐车，隔离1600m；疏散无关人员并划定警戒区。\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·粉体与空气可形成爆炸性混合物， 当达到一定浓度时， 遇火星会发生爆炸\n·加热分解产生易燃气体\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：雾状水、泡沫、干粉、二氧化碳、砂土。\n·尽可能将容器从火场移至空旷处。\n",
+        "characteristic": "白色、无臭、无味固体。\n·相对密度：0.9\n·引燃温度：420℃\n·熔点：165℃-170℃\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式（C3H6）n\n",
+        "name": "聚丙烯",
+        "id": 28,
+        "individualProtection": "·空气中粉尘浓度超标时，佩戴正压式空气呼吸器\n·火灾时穿隔热服\n",
+        "emergencyLeakage": "·隔离泄漏污染区，限制出入\n·切断火源\n·用洁净的铲子收集于干燥、洁净、有盖的容器中，转移至安全场所\n·若大量泄漏，收集回收或运至废物处理场所处置\n",
+        "createDate": "2018-09-07 09:53:40"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·迅速离开现场到上风或侧风方向空气无污染处\n·注意对呼吸道（戴防毒面具、面罩或用湿毛巾捂住口鼻）、皮肤（穿防护服）进行防护\n·对中毒昏迷者立即进行人工呼吸、体外心脏挤压以及心肺复措施，同时吸氧\n·皮肤接触：脱去污染服装，皮肤用清水彻底冲洗；眼污染用生理盐水、清水或2%碳酸氢钠溶液彻底冲洗，注意呼吸道是否通畅，防止窒息或阻塞；对消化道服入者应立即催吐 \n·对症处理后由医务人员及时送医院继续观察治疗 \n",
+        "specialWarning": "★易燃，遇空气燃烧，遇水爆炸\n★不得使用直流水扑救\n",
+        "dangerBody": "·具有强烈刺激和腐蚀作用，主要损害呼吸道和眼结膜，高浓度吸入可引起肺水肿。吸入其烟雾可致烟雾热。皮肤接触可致灼伤，引起充血、水肿和起水疱，疼痛剧烈\n",
+        "purpose": "用于有机合成，也用作火箭燃料。\n",
+        "dangerEnvironmental": "\n",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·化学反应活性很高，接触空气会冒烟自燃\n·对微量的氧及水分反应极其灵敏，易引起燃烧爆炸\n·在火场中，受热的容器有爆炸危险\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：D类干粉。\n·使用D类干粉灭火\n",
+        "characteristic": "无色透明液体，具有强烈的霉烂气味。\n·相对密度：0.84\n·饱和蒸汽压：0.53kPa（83℃）",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式 (CH3CH2)3Al\n",
+        "name": "三乙基铝",
+        "id": 29,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿重型防化服\n·灭火时穿灭火防护服",
+        "emergencyLeakage": "·消除所有点火源（泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，切断泄漏源\n·构筑围堤或挖沟槽收容泄漏物，防止进入水体、下水道、地下室或限制性空间\n·用砂土干粉、石墨等覆盖。污染地域尽量不用水冲洗",
+        "createDate": "2018-09-07 10:23:17"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·吸入：迅速脱离现场至空气新鲜处。保持呼吸道畅通。如呼吸困难，给输氧。呼吸心跳停止，立即进行心肺复苏术。立即就医。\n·皮肤接触：脱去污染的衣着，用肥皂水和清水彻底冲洗皮肤。如有不适感，就医。\n·眼睛接触：立即提起眼脸，用大量流动清水或生理盐水冲洗。如有不适感，就医。\n·食入：饮足量温水，禁止催吐，就医。\n",
+        "specialWarning": "★易燃液体，燃烧会产生一氧化碳、二氧化碳等有毒气体\n★在火场中，容器内压增大有开裂和爆炸的危险\n",
+        "dangerBody": "·本品蒸气或雾对眼睛、粘膜和上呼吸道有刺激作用，可引起化学性肺炎\n·对皮肤有刺激性\n",
+        "purpose": "主要是生产无铅、高辛烷值、含氧汽油的理想调合组份，作为汽油添加剂已经在全世界范围内普遍使用。\n",
+        "dangerEnvironmental": "·该物对环境有危害，易于与水融合，可渗入土壤，破坏地下水质\n",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少50m，下风向疏散至少300m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离800m。\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·易燃，其蒸气与空气可形成爆炸性混合物，遇明火、高热或与氧化剂接触，有引起燃烧爆炸的危险\n·与氧化剂接触猛烈反应\n·其蒸气比空气重，能在较低处扩散到相当远的地方，遇火源会着火回燃\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "灭火剂：采用抗溶性泡沫、干粉、二氧化碳、砂土灭火剂灭火。\n·堵截火势，阻止蔓延\n·冷却控制，逐步推进\n·加强掩护，确保安全\n·调集力量，一举消灭\n·排除险情，稳定燃烧\n",
+        "characteristic": "一种无色、透明、高辛烷值的液体，具有醚样气味。\n·熔点：-108.6℃\n·沸点：55.2℃\n·相对密度：0.74\n·闪点：-10℃\n·爆炸极限：1.6％～15.1％\n·饱和蒸汽压：27kPa(20℃)\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式CH3OC(CH3)3\n",
+        "name": " MTBE",
+        "id": 30,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿防静电服\n·戴化学安全防护眼镜\n·戴橡胶耐油手套\n",
+        "emergencyLeakage": "·消除火源\n·采用关阀、堵漏、输转、倒罐等工艺措施切断泄漏源\n·泡沫覆盖，减少挥发\n·筑堤、导流，回收泄漏物，防止进入水体、雨排\n·用砂土或其他不燃材料吸收泄漏物\n",
+        "createDate": "2018-09-07 10:25:37"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医\n",
+        "specialWarning": "★极易燃\n★若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n",
+        "dangerBody": "·单纯性窒息性气体\n·在高浓度时，由于空气中氧分压降低引起缺氧性窒息\n",
+        "purpose": "主要用于盐酸、氨和甲醇的合成；做为冶金的还原剂，石油炼制中的加氢脱硫剂。液态氢可作高速推进火箭的燃料；也是极有前途的无污染燃料。\n",
+        "dangerEnvironmental": "·对环境无害\n",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少200m，下风向疏散至少800m。然后进行气体浓度检测，根据有害气体的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离1600m。\n考虑撤离隔离医内的人员、物资\n·疏散无关人员并划定警戒区\n·在上风处停留\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·气体比空气轻，在室内使用和储存时，泄漏气体上升滞留屋顶不易排出，遇火星会引起爆炸\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": null,
+        "characteristic": "·无色、无臭的气体。很难液化。液态氢无色透明。极易扩散和渗透。微溶于水\n·气体相对密度：0.07\n·爆炸极限：4％～75％\n·饱和蒸汽压：13.33kPa（-257.9℃）\n·临界温度：-240℃\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式H2\n",
+        "name": "氢气",
+        "id": 31,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿轻型防化服\n",
+        "emergencyLeakage": "·建立警戒区。迅速撤离泄漏区人员至上风处，并进行隔离，划出警戒线，设立明显标示，通知警戒区内和周边人员迅速撤离，禁止车辆和无关人员进入警戒区\n·立即切断泄露气源。并迅速撤离泄漏污染区至上风处。在保证安全的情况下堵漏，抢修作业应使用防静电工具\n·消除火种。停止所有用火作业和消除可能产生火花的活动，禁止敲击设备管道，防止摩擦、撞击产生火花；用开花水枪对准泄漏的罐壁和泄漏点区域喷洒消防水，以降低现场气温和泄漏的设备温度，在确保安全的情况下，采用关阀、堵漏等措施，切断气源\n·泄压排放。在工艺流程完好的情况下，通过排放线将容器内的氢气排放至紧急事故火炬管线\n·稀释泄漏区氢气。对泄漏污染区进行通风，若不能及时切断泄露时，应采用蒸汽进行稀释，防止氢气积聚形成爆炸性气体混合物\n·若泄漏发生在室内，宜使用吸风系统将泄漏的氢气排至室外，对室内进行通风置换。稀释室内氢气浓度，防止氢气积聚形成爆炸性气体混合物，通风系统使用防爆设备\n·使用本质安全型通讯工具\n火灾扑救\n灭火剂：干粉、二氧化碳、雾状水。\n·应及时切断气源。若不能立即切断气源，不得熄灭正在燃烧的气体，并用水强制冷却着火设备，同时可向氢气设备通入惰性气体氮气，氢气系统应保持正压状态，防止氢气系统回火发生。若不能切断泄漏气源，则不允许熄灭泄漏处的火焰\n·冷却和控制燃烧。限制空间氢气设备着火，则不允许熄灭泄漏处的火焰，应积极喷水冷却容器，控制氢气稳定燃烧，防止火灾扩大或爆炸。逐步切断气源，并向隔离管线、阀门及邻近的设备喷水，保护毗邻的建筑物免受火灾威胁，控制火势的扩大和蔓延。氢气设备通入氮气让其自行熄灭\n·灭火。组织足够消防力量，将火势控制在最小范围，在用射流水冷却着火罐壁的情况下，用干粉喷洒着火点，覆盖火源，终止燃烧，直到火焰完全熄灭。在未能切断气源的情况下，严禁熄灭已稳定燃烧的火焰\n·设备突然发出异常声音或发生异常现象，立即撤离\n",
+        "createDate": "2018-09-07 14:36:47"
+    }, {
+        "fileName": "",
+        "emergencyFirstAid": "·皮肤接触：脱去污染的衣着，用清水彻底冲洗皮肤。就医\n·眼睛接触：提起眼睑，用流动清水或生理盐水冲洗。就医\n·吸入：迅速脱离现场至空气新鲜处。保持呼吸道通畅。如呼吸困难，给输氧。呼吸、心跳停止，立即进行心肺复苏术。就医。禁用肾上腺素\n·食入：饮水，禁止催吐。就医\n",
+        "specialWarning": "★致癌物\n★易燃，其蒸气与空气混合，能形成爆炸性混合物\n★注意：闪点很低，用水灭火无效\n★不得使用直流水扑救\n",
+        "dangerBody": "·IDLH:500ppm\n·吸入高浓度苯蒸气对中枢神经系统有麻醉作用，出现头痛、头晕、恶心、呕吐、神志恍惚、嗜睡等。重者意识丧失、抽搐，甚至死亡\n·长期接触苯对造血系统有损害，引起白细胞和血小板减少，重者导致再生障碍性贫血\n·本品可引起白血病。具有生殖毒性\n",
+        "purpose": "主要用于制造苯的衍生物。是生产合成树脂、合成橡胶、合成纤维、染料、洗涤剂、医药、农药和特种溶剂的重要原料。也用作溶剂和燃料掺合剂。\n",
+        "dangerEnvironmental": "·具有很强的挥发性，易造成空气污染\n·在无氧状态下，很难被生物降解。在有氧状态下降解半衰期为6～20天\n",
+        "typeName": "炼油化工常见危险化学品",
+        "emergencyQuarantine": "泄漏：污染范围不明的情况下，初始隔离至少50m，下风向疏散至少300m。然后进行气体浓度检测，根据有害蒸气的实际浓度，调整隔离、疏散距离。\n火灾：火场内如有储罐、槽车或罐车，隔离800m。\n·疏散无关人员并划定警戒区\n·在上风处停留，切勿进入低洼处\n·进入密闭空间之前必须先通风\n",
+        "type": 24,
+        "dangerCombustionExplosion": "·易燃，蒸气可与空气形成爆炸性混合物，遇明火、高热能引起燃烧爆炸\n·若遇高热，容器内压增大，有开裂或爆炸的危险\n·蒸气比空气重，能在较低处扩散到相当远的地方，遇火回燃\n",
+        "lastEditUserId": 1,
+        "lastEditUserName": "管理员",
+        "emergencyFire": "注意：闪点很低，用水灭火无效。\n灭火剂：干粉、二氧化碳、泡沫。\n·不得使用直流水扑救\n·在确保安全的前提下，将容器移离火场\n储罐、公路、铁路、槽车火灾\n·尽可能远距离灭火或使用车载炮或移动水炮扑救\n·用大量水冷却容器，直至火灾扑灭\n·容器突然发出异常声音或发生异常现象  \n·切勿在储罐两端停留\n",
+        "characteristic": "无色透明非极性液体，有强烈芳香味。微溶于水。与硝酸、浓硫酸、高锰酸钾等氧化剂反应。\n·熔点：5.5℃\n·沸点：80.1℃\n·相对密度：0.88\n·闪点：-11℃\n·爆炸极限：1.2％～8.0％\n·临界温度：288.94℃\n·饱和蒸汽压：179.19kPa（100℃）\n",
+        "uploadUser": null,
+        "filePath": "",
+        "uploadDate": null,
+        "chemicalFormula": "分子式C6H6\n",
+        "name": "苯",
+        "id": 32,
+        "individualProtection": "·佩戴正压式空气呼吸器\n·穿重型防化服\n",
+        "emergencyLeakage": "·消除所有点火源(泄漏区附近禁止吸烟，消除所有明火、火花或火焰)\n·使用防爆的通讯工具\n·在确保安全的情况下，采用关阀、堵漏等措施，以切断泄漏源\n·喷雾状水稀释挥发的蒸气\n·作业时所有设备应接地\n·构筑围堤或挖沟槽收容泄漏物，防止进人水体、下水道、地下室或限制性空间\n·用泡沫覆盖泄漏物，减少挥发\n·用砂土或其他不燃材料吸收泄漏物\n·如果储罐发生泄漏，可通过倒罐转移尚末泄漏的液体\n",
+        "createDate": "2018-09-07 14:38:43"
+    }
 ];
 
 function dangerousChemicals_table(pageNumber, pageSize, nameOrId, typeId) {
-  let list = dangerousChemicals_table_info;
-  if (nameOrId !== undefined && nameOrId !== "") {
-    list = list.filter(item => {
-      return (item.name.indexOf(nameOrId) !== -1) || (item.id.toString().indexOf(nameOrId) !== -1);
-    });
-  }
-  if (typeId !== undefined && typeId !== "" && typeId !== 0) {
-    list = list.filter(item => {
-      return item.type === typeId;
-    });
-  }
-  let total = list.length;
-  list = list.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
-  return {"totalRow": total, "dangerousChemicalsTable": list}
+    let list = dangerousChemicals_table_info;
+    if (nameOrId !== undefined && nameOrId !== "") {
+        list = list.filter(item => {
+            return (item.name.indexOf(nameOrId) !== -1) || (item.id.toString().indexOf(nameOrId) !== -1);
+        });
+    }
+    if (typeId !== undefined && typeId !== "" && typeId !== 0) {
+        list = list.filter(item => {
+            return item.type === typeId;
+        });
+    }
+    let total = list.length;
+    list = list.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+    return {"totalRow": total, "dangerousChemicalsTable": list}
 }
 
 Mock.mock('/dangerousChemicals/table', 'post', options => {
-    let body = JSON.parse(options.body);
-    return dangerousChemicals_table(body.pageNumber, body.pageSize, body.keyWords.nameOrId, body.typeId)
-  }
+        let body = JSON.parse(options.body);
+        return dangerousChemicals_table(body.pageNumber, body.pageSize, body.keyWords.nameOrId, body.typeId)
+    }
 );
-
+const typeList = [
+    {"id": 1, "label": "华北油区常见危险化学品"},
+    {"id": 24, "label": "炼油化工常见危险化学品", children: [{"id": 25, "label": "test1"}]}
+]
 Mock.mock('/dangerousChemicalsType/typeList', 'post', options => {
-  return {
-    "typeList": [{"id": 1, "label": "华北油区常见危险化学品"}, {"id": 24, "label": "炼油化工常见危险化学品"}]
-  }
+    return {
+        "typeList": typeList
+    }
 });
 
+Mock.mock('/dangerousChemicalsType/typeOne', 'post', options => {
+    let body = JSON.parse(options.body);
+    console.log('body', body);
+    let nodes = getNodesInTree(body.id, JSON.parse(JSON.stringify(typeList)));
+    let parentNode = {};
+    let node = {};
+    if (nodes.length > 0) {
+        node = nodes[nodes.length - 1]
+    }
+    if (nodes.length > 1) {
+        parentNode = nodes[nodes.length - 2]
+    }
+    return {id: node.id, label: node.label, parentId: parentNode.id};
+});
+
+
 Mock.mock('/dangerousChemicals/dangerousChemicals', 'post', options => {
-  let body = JSON.parse(options.body);
-  let res = dangerousChemicals_table_info.filter(item => {
-    return item.id === body.id
-  })[0];
-  return {"dangerousChemicals": res}
+    let body = JSON.parse(options.body);
+    let res = dangerousChemicals_table_info.filter(item => {
+        return item.id === body.id
+    })[0];
+    return {"dangerousChemicals": res}
+});
+
+Mock.mock('/dangerousChemicals/uploadFile', 'post', options => {
+    return {result: true, fileName: "testFile", filePath: "/path/testFile",}
 });
 
 Mock.mock('/user/table', 'post', options => {
-  return {
-    "totalRow": 1, "userTable": [{
-      "loginId": "admin",
-      "role_ids_obj": [{"name": "岗位管理", "id": 1, "status": "正常"}, {
-        "name": "重点单位管理",
-        "id": 2,
-        "status": "正常"
-      }, {"name": "知识库管理", "id": 3, "status": "正常"}, {"name": "部门管理", "id": 8, "status": "正常"}, {
-        "name": "用户管理1",
-        "id": 10,
-        "status": "正常"
-      }],
-      "companyName": "消防支队",
-      "lastLoginDate": "2019-07-30 15:35:31",
-      "role_ids": "1,2,3,8,10",
-      "post": 47,
-      "postName": "综合管理员",
-      "workBeginDate": "2018-02-27",
-      "avatarFullPath": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoBAMAAAB+0KVeAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAeUExURRUTEOjf3z44McrHxqumpIR/el9dVeawsct7gZxBR/0nTU4AAAJcSURBVCjPJZNBj5swEIWfrASpRwuq7NFyF5Te6jVpr7uxYa8EMO0xmw2o16hbmd6qHgrc9hj+bYetJcTw+XnmaRhDa54+c8W5rfmyHjjX0FrlS6D3SU1bofkPo8ryXcwLsKQKTah4CKUzFdnjim9qkyZOcb3AqOKR3B/eEn4TBx4pgpnie3fh3m8890WguAmxCJsL34zDNF42N3imWsiV/jIQ8n55eBlwbtCqR3/ph40fp2Gch5/FU6Sxax82m7kfJ8m2/Xy9FGvLETq/6a/EAHbtR78rDxyR957gK2ht+37w7wmm/TD6oR8Fw+1AJkavObLBj+SRl1J+pTfBF4X+0k8zmfkjtyMFIy2NRz/NH2ey3tV/MV+naR5/wN68Moh342gLYN7Ok5wN1C8wAXx/UQQlkxKsxcNvJF0nIM9hQ0Hb0RZMwVrnThRa1zlXZ4IlqIqgtq6hU51sa2szgYCUBK1tKLOM0zcooe8Dm9o0kwJsbawmWCP9FNSp0VlMFpJa6wwwSO9YbbTOEzrWudqWYAouZ7Sf5lIELuvqkuooZI61Wuvlw6WlJMexoiajNTo9slZ2Jm8agbMCz0VgTX4Cy5nZOSdQcfC9QNK6BqjFbWpz4InDuBJB7dwRrYytPSKoQgSHz0DsrABloB6IQ7gHDhEVbjJ8oDxAkKiIAavwJJaW3nZCJie54vcx9njIkUjESZuckhOeIlRIxSoSq7JrE9eKQMTqfq2gSVqsy0SQGhDP0eJTp2JdBNR5Sk8DfiZhSDO/h2PLJNEfs+c7VOFyEUh6JN/ueKYpXoT6H/Y7su0FIfOAAAAAAElFTkSuQmCC",
-      "company": 1,
-      "id": 1,
-      "group": "一组",
-      "entryDate": "2018-02-26",
-      "level": "一级",
-      "sex": 2,
-      "degree": "无",
-      "birth": "2018-02-02",
-      "employeeId": "9527",
-      "isAdmin": 1,
-      "avatar": "/userAvatar/190730142439/file.png",
-      "individualResume": "信息内容",
-      "qualification": "信息内容",
-      "role_ids_all_obj": [{"name": "岗位管理", "id": 1, "status": "正常"}, {
-        "name": "重点单位管理",
-        "id": 2,
-        "status": "正常"
-      }, {"name": "知识库管理", "id": 3, "status": "正常"}, {"name": "角色管理", "id": 5, "status": "停用"}, {
-        "name": "部门管理",
-        "id": 8,
-        "status": "正常"
-      }, {"name": "用户管理1", "id": 10, "status": "正常"}],
-      "role_ids_all": "1,2,3,5,8,10",
-      "page_ids": "1,2,5,101,103,104,201,301,401",
-      "name": "管理员",
-      "page_ids_all": "1,2,5,101,102,103,104,201,301,401",
-      "isDel": false
-    }]
-  }
+    return {
+        "totalRow": 1, "userTable": [{
+            "loginId": "admin",
+            "role_ids_obj": [{"name": "岗位管理", "id": 1, "status": "正常"}, {
+                "name": "重点单位管理",
+                "id": 2,
+                "status": "正常"
+            }, {"name": "知识库管理", "id": 3, "status": "正常"}, {"name": "部门管理", "id": 8, "status": "正常"}, {
+                "name": "用户管理1",
+                "id": 10,
+                "status": "正常"
+            }],
+            "companyName": "消防支队",
+            "lastLoginDate": "2019-07-30 15:35:31",
+            "role_ids": "1,2,3,8,10",
+            "post": 47,
+            "postName": "综合管理员",
+            "workBeginDate": "2018-02-27",
+            "avatarFullPath": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoBAMAAAB+0KVeAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAeUExURRUTEOjf3z44McrHxqumpIR/el9dVeawsct7gZxBR/0nTU4AAAJcSURBVCjPJZNBj5swEIWfrASpRwuq7NFyF5Te6jVpr7uxYa8EMO0xmw2o16hbmd6qHgrc9hj+bYetJcTw+XnmaRhDa54+c8W5rfmyHjjX0FrlS6D3SU1bofkPo8ryXcwLsKQKTah4CKUzFdnjim9qkyZOcb3AqOKR3B/eEn4TBx4pgpnie3fh3m8890WguAmxCJsL34zDNF42N3imWsiV/jIQ8n55eBlwbtCqR3/ph40fp2Gch5/FU6Sxax82m7kfJ8m2/Xy9FGvLETq/6a/EAHbtR78rDxyR957gK2ht+37w7wmm/TD6oR8Fw+1AJkavObLBj+SRl1J+pTfBF4X+0k8zmfkjtyMFIy2NRz/NH2ey3tV/MV+naR5/wN68Moh342gLYN7Ok5wN1C8wAXx/UQQlkxKsxcNvJF0nIM9hQ0Hb0RZMwVrnThRa1zlXZ4IlqIqgtq6hU51sa2szgYCUBK1tKLOM0zcooe8Dm9o0kwJsbawmWCP9FNSp0VlMFpJa6wwwSO9YbbTOEzrWudqWYAouZ7Sf5lIELuvqkuooZI61Wuvlw6WlJMexoiajNTo9slZ2Jm8agbMCz0VgTX4Cy5nZOSdQcfC9QNK6BqjFbWpz4InDuBJB7dwRrYytPSKoQgSHz0DsrABloB6IQ7gHDhEVbjJ8oDxAkKiIAavwJJaW3nZCJie54vcx9njIkUjESZuckhOeIlRIxSoSq7JrE9eKQMTqfq2gSVqsy0SQGhDP0eJTp2JdBNR5Sk8DfiZhSDO/h2PLJNEfs+c7VOFyEUh6JN/ueKYpXoT6H/Y7su0FIfOAAAAAAElFTkSuQmCC",
+            "company": 1,
+            "id": 1,
+            "group": "一组",
+            "entryDate": "2018-02-26",
+            "level": "一级",
+            "sex": 2,
+            "degree": "无",
+            "birth": "2018-02-02",
+            "employeeId": "9527",
+            "isAdmin": 1,
+            "avatar": "/userAvatar/190730142439/file.png",
+            "individualResume": "信息内容",
+            "qualification": "信息内容",
+            "role_ids_all_obj": [{"name": "岗位管理", "id": 1, "status": "正常"}, {
+                "name": "重点单位管理",
+                "id": 2,
+                "status": "正常"
+            }, {"name": "知识库管理", "id": 3, "status": "正常"}, {"name": "角色管理", "id": 5, "status": "停用"}, {
+                "name": "部门管理",
+                "id": 8,
+                "status": "正常"
+            }, {"name": "用户管理1", "id": 10, "status": "正常"}],
+            "role_ids_all": "1,2,3,5,8,10",
+            "page_ids": "1,2,5,101,103,104,201,301,401",
+            "name": "管理员",
+            "page_ids_all": "1,2,5,101,102,103,104,201,301,401",
+            "isDel": false
+        }]
+    }
 });
 
 Mock.mock('/user/user', 'post', options => {
-  return {
-    "user": {
-      "loginId": "admin",
-      "entryDate": "2018-02-26",
-      "level": "一级",
-      "sex": 2,
-      "degree": "无",
-      "birth": "2018-02-02",
-      "employeeId": "9527",
-      "lastLoginDate": "2019-07-30 15:35:31",
-      "isAdmin": 1,
-      "avatar": "/userAvatar/190730142439/file.png",
-      "checkedRoles": [0, 7, 10, 5, 8, 1, 2, 3, 14, 13, 12, 11],
-      "individualResume": "信息内容",
-      "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNTY1NzY4MTMxfQ.AWHEjBQZsgnpL9b_DuU8OYuo45-lLHjIz4sPFp1ywqw",
-      "qualification": "",
-      "post": 47,
-      "workBeginDate": "2018-02-27",
-      "avatarFullPath": "",
-      "name": "管理员",
-      "company": 1,
-      "id": 1,
-      "isDel": false,
-      "group": "一组"
+    return {
+        "user": {
+            "loginId": "admin",
+            "entryDate": "2018-02-26",
+            "level": "一级",
+            "sex": 2,
+            "degree": "无",
+            "birth": "2018-02-02",
+            "employeeId": "9527",
+            "lastLoginDate": "2019-07-30 15:35:31",
+            "isAdmin": 1,
+            "avatar": "/userAvatar/190730142439/file.png",
+            "checkedRoles": [0, 7, 10, 5, 8, 1, 2, 3, 14, 13, 12, 11],
+            "individualResume": "信息内容",
+            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZXhwIjoxNTY1NzY4MTMxfQ.AWHEjBQZsgnpL9b_DuU8OYuo45-lLHjIz4sPFp1ywqw",
+            "qualification": "",
+            "post": 47,
+            "workBeginDate": "2018-02-27",
+            "avatarFullPath": "",
+            "name": "管理员",
+            "company": 1,
+            "id": 1,
+            "isDel": false,
+            "group": "一组"
+        }
     }
-  }
 });
 
 Mock.mock('/user/roles', 'post', options => {
-  return {
-    "roles": [{"text": "", "value": 17}, {"text": "岗位管理", "value": 1}, {
-      "text": "战斗员",
-      "value": 15
-    }, {"text": "用户管理1", "value": 10}, {"text": "知识库管理", "value": 3}, {"text": "角色管理", "value": 5}, {
-      "text": "部门管理",
-      "value": 8
-    }, {"text": "重点单位管理", "value": 2}]
-  }
+    return {
+        "roles": [
+            {"text": "", "value": 17},
+            {"text": "岗位管理", "value": 1},
+            {"text": "战斗员", "value": 15},
+            {"text": "用户管理1", "value": 10},
+            {"text": "知识库管理", "value": 3},
+            {"text": "角色管理", "value": 5},
+            {"text": "部门管理", "value": 8},
+            {"text": "重点单位管理", "value": 2}
+        ]
+    }
 });
 
 Mock.mock('/company/companyList', 'post', options => {
-  return {
-    "companyList": [
-      {
-        "children": [
-          {"id": 108, "label": "交通服务队"},
-          {"id": 103, "label": "人事科（组织部)"},
-          {"id": 102, "label": "党群工作科(纪检监察科)"},
-          {
-            "children": [{"id": 10901, "label": "生活服务队"}],
-            "id": 109,
-            "label": "后勤服务队"
-          },
-          {"id": 106, "label": "后勤装备科"},
-          {"id": 105, "label": "安全企管科（消防安全监督中心）"},
-          {
-            "children": [
-              {"id": 11302, "label": "廊坊大队七中队"},
-              {"id": 11303, "label": "廊坊大队储气库执勤站"},
-              {"id": 11301, "label": "廊坊大队四中队"}],
-            "id": 113,
-            "label": "廊坊大队"
-          },
-          {
-            "children": [{"id": 10701, "label": "督 导 组"}],
-            "id": 107,
-            "label": "战训科（119指挥中心）"
-          },
-          {
-            "children": [
-              {"id": 11101, "label": "河间大队三中队"},
-              {"id": 11102, "label": "河间大队九中队"}
-            ],
-            "id": 111,
-            "label": "河间大队"
-          },
-          {
-            "children": [{"id": 11001, "label": "特勤大队一中队"}, {"id": 11002, "label": "特勤大队六中队"}],
-            "id": 110,
-            "label": "特勤大队"
-          },
-          {
-            "children": [{"id": 11502, "label": "石化大队十一中队"}, {"id": 11501, "label": "石化大队十中队"}],
-            "id": 115,
-            "label": "石化大队"
-          },
-          {"id": 101, "label": "综合办公室"},
-          {"id": 104, "label": "计划财务科"},
-          {
-            "children": [{"id": 11402, "label": "辛集大队八中队"}, {"id": 11401, "label": "辛集大队十二中队"}],
-            "id": 114,
-            "label": "辛集大队"
-          },
-          {
-            "children": [{"id": 11201, "label": "霸州大队二中队"}, {"id": 11202, "label": "霸州大队五中队"}],
-            "id": 112,
-            "label": "霸州大队"
-          }],
-        "id": 1,
-        "label": "消防支队"
-      }],
-  }
+    return {
+        "companyList": [
+            {
+                "children": [
+                    {"id": 108, "label": "交通服务队"},
+                    {"id": 103, "label": "人事科（组织部)"},
+                    {"id": 102, "label": "党群工作科(纪检监察科)"},
+                    {
+                        "children": [{"id": 10901, "label": "生活服务队"}],
+                        "id": 109,
+                        "label": "后勤服务队"
+                    },
+                    {"id": 106, "label": "后勤装备科"},
+                    {"id": 105, "label": "安全企管科（消防安全监督中心）"},
+                    {
+                        "children": [
+                            {"id": 11302, "label": "廊坊大队七中队"},
+                            {"id": 11303, "label": "廊坊大队储气库执勤站"},
+                            {"id": 11301, "label": "廊坊大队四中队"}],
+                        "id": 113,
+                        "label": "廊坊大队"
+                    },
+                    {
+                        "children": [{"id": 10701, "label": "督 导 组"}],
+                        "id": 107,
+                        "label": "战训科（119指挥中心）"
+                    },
+                    {
+                        "children": [
+                            {"id": 11101, "label": "河间大队三中队"},
+                            {"id": 11102, "label": "河间大队九中队"}
+                        ],
+                        "id": 111,
+                        "label": "河间大队"
+                    },
+                    {
+                        "children": [{"id": 11001, "label": "特勤大队一中队"}, {"id": 11002, "label": "特勤大队六中队"}],
+                        "id": 110,
+                        "label": "特勤大队"
+                    },
+                    {
+                        "children": [{"id": 11502, "label": "石化大队十一中队"}, {"id": 11501, "label": "石化大队十中队"}],
+                        "id": 115,
+                        "label": "石化大队"
+                    },
+                    {"id": 101, "label": "综合办公室"},
+                    {"id": 104, "label": "计划财务科"},
+                    {
+                        "children": [{"id": 11402, "label": "辛集大队八中队"}, {"id": 11401, "label": "辛集大队十二中队"}],
+                        "id": 114,
+                        "label": "辛集大队"
+                    },
+                    {
+                        "children": [{"id": 11201, "label": "霸州大队二中队"}, {"id": 11202, "label": "霸州大队五中队"}],
+                        "id": 112,
+                        "label": "霸州大队"
+                    }],
+                "id": 1,
+                "label": "消防支队"
+            }],
+    }
 });
 
 Mock.mock('/post/postList', 'post', options => {
-  return {
-    "postList": [
-      {"id": 32, "label": "中队长"},
-      {"id": 25, "label": "党委书记"},
-      {"id": 26, "label": "党委副书记"},
-      {"id": 38, "label": "兼职驾驶员"},
-      {"id": 28, "label": "副中队长"},
-      {"id": 46, "label": "副大队长"},
-      {"id": 24, "label": "副支队长"},
-      {"id": 50, "label": "副队长"},
-      {"id": 36, "label": "司机班长"},
-      {"id": 40, "label": "大队长"},
-      {"id": 42, "label": "安全参谋"},
-      {"id": 49, "label": "安全员"},
-      {"id": 31, "label": "战勤员"},
-      {"id": 35, "label": "战勤班长"},
-      {"id": 30, "label": "战斗员"},
-      {"id": 37, "label": "战斗班长"},
-      {"id": 43, "label": "战训参谋"},
-      {"id": 34, "label": "技术员"},
-      {"id": 33, "label": "指导员"},
-      {"id": 23, "label": "支队长"},
-      {"id": 41, "label": "教导员"},
-      {"id": 22, "label": "教授"},
-      {"id": 27, "label": "文书"},
-      {"id": 39, "label": "汽车驾驶员"},
-      {"id": 45, "label": "消防战斗员"},
-      {"id": 48, "label": "炊事员"},
-      {"id": 44, "label": "综合管理"},
-      {"id": 47, "label": "综合管理员"},
-      {"id": 29, "label": "驾驶员"}
-    ]
-  }
+    return {
+        "postList": [
+            {"id": 32, "label": "中队长"},
+            {"id": 25, "label": "党委书记"},
+            {"id": 26, "label": "党委副书记"},
+            {"id": 38, "label": "兼职驾驶员"},
+            {"id": 28, "label": "副中队长"},
+            {"id": 46, "label": "副大队长"},
+            {"id": 24, "label": "副支队长"},
+            {"id": 50, "label": "副队长"},
+            {"id": 36, "label": "司机班长"},
+            {"id": 40, "label": "大队长"},
+            {"id": 42, "label": "安全参谋"},
+            {"id": 49, "label": "安全员"},
+            {"id": 31, "label": "战勤员"},
+            {"id": 35, "label": "战勤班长"},
+            {"id": 30, "label": "战斗员"},
+            {"id": 37, "label": "战斗班长"},
+            {"id": 43, "label": "战训参谋"},
+            {"id": 34, "label": "技术员"},
+            {"id": 33, "label": "指导员"},
+            {"id": 23, "label": "支队长"},
+            {"id": 41, "label": "教导员"},
+            {"id": 22, "label": "教授"},
+            {"id": 27, "label": "文书"},
+            {"id": 39, "label": "汽车驾驶员"},
+            {"id": 45, "label": "消防战斗员"},
+            {"id": 48, "label": "炊事员"},
+            {"id": 44, "label": "综合管理"},
+            {"id": 47, "label": "综合管理员"},
+            {"id": 29, "label": "驾驶员"}
+        ]
+    }
 });
 
 Mock.mock('/role/table', 'post', options => {
-  return {
-    "roleTable": [
-      {"note": "备注", "name": "岗位管理", "id": 1, "isDel": false, "status": "正常"},
-      {"note": "无", "name": "重点单位管理", "id": 2, "isDel": false, "status": "正常"},
-      {"note": "无", "name": "知识库管理", "id": 3, "isDel": false, "status": "正常"},
-      {"note": "无", "name": "角色管理", "id": 5, "isDel": false, "status": "停用"},
-      {"note": "无", "name": "部门管理", "id": 8, "isDel": false, "status": "正常"},
-      {"note": "无", "name": "用户管理1", "id": 10, "isDel": false, "status": "正常"},
-      {"note": "无", "name": "战斗员", "id": 15, "isDel": false, "status": "正常"}]
-  }
+    return {
+        "roleTable": [
+            {"note": "备注", "name": "岗位管理", "id": 1, "isDel": false, "status": "正常"},
+            {"note": "无", "name": "重点单位管理", "id": 2, "isDel": false, "status": "正常"},
+            {"note": "无", "name": "知识库管理", "id": 3, "isDel": false, "status": "正常"},
+            {"note": "无", "name": "角色管理", "id": 5, "isDel": false, "status": "停用"},
+            {"note": "无", "name": "部门管理", "id": 8, "isDel": false, "status": "正常"},
+            {"note": "无", "name": "用户管理1", "id": 10, "isDel": false, "status": "正常"},
+            {"note": "无", "name": "战斗员", "id": 15, "isDel": false, "status": "正常"}]
+    }
 });

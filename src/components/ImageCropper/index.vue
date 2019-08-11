@@ -4,16 +4,17 @@
       <img :src="imgFullPath" height="120" alt=""/>
     </div>
     <el-button class="btn" @click="toggleShow">设置头像</el-button>
-    <my-upload field="file"
+    <VueImageCropUpload field="file"
                @crop-success="cropSuccess"
                @crop-upload-success="cropUploadSuccess"
                @crop-upload-fail="cropUploadFail"
                v-model="show"
                :width="300"
                :height="300"
-               :url="process.env.BASE_API+'user/uploadFile'"
+               :url="'/user/uploadFile'"
                :headers="headers"
-               img-format="png"></my-upload>
+               img-format="png">
+    </VueImageCropUpload>
   </div>
 </template>
 
@@ -21,7 +22,7 @@
   import {Message} from 'element-ui'
   import {userAuth} from 'src/utils/auth'
   import 'babel-polyfill'; // es6 shim
-  import myUpload from 'vue-image-crop-upload';
+  import VueImageCropUpload from 'vue-image-crop-upload';
 
   export default ({
 
@@ -36,7 +37,7 @@
       }
     },
     components: {
-      'my-upload': myUpload
+      VueImageCropUpload
     },
     methods: {
 

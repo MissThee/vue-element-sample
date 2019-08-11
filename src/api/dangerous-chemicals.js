@@ -43,6 +43,13 @@ export function fetchTypeList(needChildren) {
   })
 }
 
+export function fetchTypeOne(id) {
+  return request({
+    url: '/dangerousChemicalsType/typeOne',
+    data: {id}
+  })
+}
+
 export function updateType(form) {
   return request({
     url: '/dangerousChemicalsType/update',

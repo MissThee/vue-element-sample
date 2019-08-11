@@ -5,7 +5,7 @@ import user from './modules/user'
 import permission from './modules/permission'
 import getters from './getters'
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 const store = new Vuex.Store({
   modules: {
