@@ -99,7 +99,11 @@
         },
         methods: {
             showPwd() {
-                throw(123);
+                // throw(234);      //throw不会在控制台中定位错误位置
+                // undefined.data;  //会在控制台中定位错误位置
+                // console.log('当前运行模式',process.env.NODE_ENV)
+                // sessionStorage.setItem('testKey','这是一个测试的value值');
+                // console.log( 'sessionStorage.getItem(\'testKey\')',sessionStorage.getItem('testKey'))
                 this.pwdType = '';
             },
             hidePwd() {

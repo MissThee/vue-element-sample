@@ -42,16 +42,16 @@ module.exports = {
     */
     //对象形式configureWebpack
     configureWebpack: {
-        resolve:{
-            alias:{
-                'src':resolve('./src')
+        resolve: {
+            alias: {
+                'src': resolve('./src')
             }
         },
         externals: {
             'BMap': 'BMap',
             'BMap_Symbol_SHAPE_POINT': 'BMap_Symbol_SHAPE_POINT'
         },
-        devtool: 'inline-source-map'
+        devtool: process.env.NODE_ENV === 'development' ? 'inline-source-map' : 'none'
         //configureWebpack中与chainWebpack配置会合并
         // resolve: {
         //     alias: {
