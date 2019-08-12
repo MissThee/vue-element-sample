@@ -1,5 +1,5 @@
 <template>
-  <div class="menu-wrapper">
+  <div >
     <template v-for="item in routes" v-if="!item.hidden&&item.children">
 
       <router-link v-if="item.children.length===1 && !item.children[0].children" :to="item.path+'/'+item.children[0].path" :key="item.children[0].name">
@@ -17,7 +17,7 @@
         </template>
 
         <template v-for="child in item.children" v-if="!child.hidden">
-          <sidebar-item class="nest-menu" v-if="child.children&&child.children.length>0" :routes="[child]" :key="child.path"></sidebar-item>
+          <sidebar-item  v-if="child.children&&child.children.length>0" :routes="[child]" :key="child.path"></sidebar-item>
           <router-link v-else :to="item.path+'/'+child.path" :key="child.name">
             <el-menu-item :index="item.path+'/'+child.path">
               <img v-if="child.meta&&child.meta.icon" :src="child.meta.icon" height="20px" alt=""/>

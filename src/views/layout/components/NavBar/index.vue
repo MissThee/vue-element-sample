@@ -1,13 +1,13 @@
 <template>
-    <el-menu class="navbar" mode="horizontal">
+    <div class="navbar" mode="horizontal">
         <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
 
         <breadcrumb class="breadcrumb-container"></breadcrumb>
 
         <div class="right-menu">
-            <el-tooltip effect="dark" content="□" placement="bottom">
+<!--            <el-tooltip effect="dark" content="□" placement="bottom">-->
                 <screenfull class="screenfull right-menu-item"></screenfull>
-            </el-tooltip>
+<!--            </el-tooltip>-->
 
             <el-dropdown trigger="click" class='international generateTitle' @command="handleSetLanguage">
                 <div class="language-text">{{language}}</div>
@@ -32,7 +32,7 @@
             <password-change ref="passwordChange"></password-change>
         </div>
 
-    </el-menu>
+    </div>
 </template>
 
 <script>
@@ -99,6 +99,7 @@
         line-height: 50px;
         border-radius: 0 !important;
         box-sizing: border-box;
+        background-color: #eeeeee;
 
         .hamburger-container {
             line-height: 50px;

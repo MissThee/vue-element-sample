@@ -50,7 +50,7 @@
 
         .no-redirect {
             font-weight: bold;
-            color: #97a8be;
+            color: #727a8e;
             cursor: text;
         }
     }

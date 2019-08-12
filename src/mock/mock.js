@@ -795,15 +795,14 @@ Mock.mock('/dangerousChemicalsType/typeList', 'post', options => {
 
 Mock.mock('/dangerousChemicalsType/typeOne', 'post', options => {
     let body = JSON.parse(options.body);
-    console.log('body', body);
     let nodes = getNodesInTree(body.id, JSON.parse(JSON.stringify(typeList)));
     let parentNode = {};
     let node = {};
     if (nodes.length > 0) {
-        node = nodes[nodes.length - 1]
+        node = nodes[0]
     }
     if (nodes.length > 1) {
-        parentNode = nodes[nodes.length - 2]
+        parentNode = nodes[1]
     }
     return {id: node.id, label: node.label, parentId: parentNode.id};
 });
@@ -915,105 +914,219 @@ Mock.mock('/user/roles', 'post', options => {
         ]
     }
 });
-
-Mock.mock('/company/companyList', 'post', options => {
-    return {
-        "companyList": [
+const companyList = [
+    {
+        "children": [
+            {
+                "id": 108,
+                "label": "交通服务队"
+            },
+            {
+                "id": 103,
+                "label": "人事科（组织部)"
+            },
+            {
+                "id": 102,
+                "label": "党群工作科(纪检监察科)"
+            },
             {
                 "children": [
-                    {"id": 108, "label": "交通服务队"},
-                    {"id": 103, "label": "人事科（组织部)"},
-                    {"id": 102, "label": "党群工作科(纪检监察科)"},
                     {
-                        "children": [{"id": 10901, "label": "生活服务队"}],
-                        "id": 109,
-                        "label": "后勤服务队"
-                    },
-                    {"id": 106, "label": "后勤装备科"},
-                    {"id": 105, "label": "安全企管科（消防安全监督中心）"},
+                        "id": 10901,
+                        "label": "生活服务队"
+                    }
+                ],
+                "id": 109,
+                "label": "后勤服务队"
+            },
+            {
+                "id": 106,
+                "label": "后勤装备科"
+            },
+            {
+                "id": 105,
+                "label": "安全企管科（消防安全监督中心）"
+            },
+            {
+                "children": [
                     {
-                        "children": [
-                            {"id": 11302, "label": "廊坊大队七中队"},
-                            {"id": 11303, "label": "廊坊大队储气库执勤站"},
-                            {"id": 11301, "label": "廊坊大队四中队"}],
-                        "id": 113,
-                        "label": "廊坊大队"
-                    },
-                    {
-                        "children": [{"id": 10701, "label": "督 导 组"}],
-                        "id": 107,
-                        "label": "战训科（119指挥中心）"
-                    },
-                    {
-                        "children": [
-                            {"id": 11101, "label": "河间大队三中队"},
-                            {"id": 11102, "label": "河间大队九中队"}
-                        ],
-                        "id": 111,
-                        "label": "河间大队"
+                        "id": 11302,
+                        "label": "廊坊大队七中队"
                     },
                     {
-                        "children": [{"id": 11001, "label": "特勤大队一中队"}, {"id": 11002, "label": "特勤大队六中队"}],
-                        "id": 110,
-                        "label": "特勤大队"
+                        "id": 11303,
+                        "label": "廊坊大队储气库执勤站"
                     },
                     {
-                        "children": [{"id": 11502, "label": "石化大队十一中队"}, {"id": 11501, "label": "石化大队十中队"}],
-                        "id": 115,
-                        "label": "石化大队"
-                    },
-                    {"id": 101, "label": "综合办公室"},
-                    {"id": 104, "label": "计划财务科"},
+                        "id": 11301,
+                        "label": "廊坊大队四中队"
+                    }
+                ],
+                "id": 113,
+                "label": "廊坊大队"
+            },
+            {
+                "children": [
                     {
-                        "children": [{"id": 11402, "label": "辛集大队八中队"}, {"id": 11401, "label": "辛集大队十二中队"}],
-                        "id": 114,
-                        "label": "辛集大队"
+                        "id": 10701,
+                        "label": "督 导 组"
+                    }
+                ],
+                "id": 107,
+                "label": "战训科（119指挥中心）"
+            },
+            {
+                "children": [
+                    {
+                        "id": 11101,
+                        "label": "河间大队三中队"
                     },
                     {
-                        "children": [{"id": 11201, "label": "霸州大队二中队"}, {"id": 11202, "label": "霸州大队五中队"}],
-                        "id": 112,
-                        "label": "霸州大队"
-                    }],
-                "id": 1,
-                "label": "消防支队"
-            }],
+                        "id": 11102,
+                        "label": "河间大队九中队"
+                    }
+                ],
+                "id": 111,
+                "label": "河间大队"
+            },
+            {
+                "children": [
+                    {
+                        "id": 11001,
+                        "label": "特勤大队一中队"
+                    },
+                    {
+                        "id": 11002,
+                        "label": "特勤大队六中队"
+                    }
+                ],
+                "id": 110,
+                "label": "特勤大队"
+            },
+            {
+                "children": [
+                    {
+                        "id": 11502,
+                        "label": "石化大队十一中队"
+                    },
+                    {
+                        "id": 11501,
+                        "label": "石化大队十中队"
+                    }
+                ],
+                "id": 115,
+                "label": "石化大队"
+            },
+            {
+                "id": 101,
+                "label": "综合办公室"
+            },
+            {
+                "id": 104,
+                "label": "计划财务科"
+            },
+            {
+                "children": [
+                    {
+                        "id": 11402,
+                        "label": "辛集大队八中队"
+                    },
+                    {
+                        "id": 11401,
+                        "label": "辛集大队十二中队"
+                    }
+                ],
+                "id": 114,
+                "label": "辛集大队"
+            },
+            {
+                "children": [
+                    {
+                        "id": 11201,
+                        "label": "霸州大队二中队"
+                    },
+                    {
+                        "id": 11202,
+                        "label": "霸州大队五中队"
+                    }
+                ],
+                "id": 112,
+                "label": "霸州大队"
+            }
+        ],
+        "id": 1,
+        "label": "消防支队"
+    }]
+Mock.mock('/company/list', 'post', options => {
+    return {
+        "companyList": companyList,
     }
 });
 
-Mock.mock('/post/postList', 'post', options => {
-    return {
-        "postList": [
-            {"id": 32, "label": "中队长"},
-            {"id": 25, "label": "党委书记"},
-            {"id": 26, "label": "党委副书记"},
-            {"id": 38, "label": "兼职驾驶员"},
-            {"id": 28, "label": "副中队长"},
-            {"id": 46, "label": "副大队长"},
-            {"id": 24, "label": "副支队长"},
-            {"id": 50, "label": "副队长"},
-            {"id": 36, "label": "司机班长"},
-            {"id": 40, "label": "大队长"},
-            {"id": 42, "label": "安全参谋"},
-            {"id": 49, "label": "安全员"},
-            {"id": 31, "label": "战勤员"},
-            {"id": 35, "label": "战勤班长"},
-            {"id": 30, "label": "战斗员"},
-            {"id": 37, "label": "战斗班长"},
-            {"id": 43, "label": "战训参谋"},
-            {"id": 34, "label": "技术员"},
-            {"id": 33, "label": "指导员"},
-            {"id": 23, "label": "支队长"},
-            {"id": 41, "label": "教导员"},
-            {"id": 22, "label": "教授"},
-            {"id": 27, "label": "文书"},
-            {"id": 39, "label": "汽车驾驶员"},
-            {"id": 45, "label": "消防战斗员"},
-            {"id": 48, "label": "炊事员"},
-            {"id": 44, "label": "综合管理"},
-            {"id": 47, "label": "综合管理员"},
-            {"id": 29, "label": "驾驶员"}
-        ]
+Mock.mock('/company/one', 'post', options => {
+    let body = JSON.parse(options.body);
+    let nodes = getNodesInTree(body.id, JSON.parse(JSON.stringify(companyList)));
+    let parentNode = {};
+    let node = {};
+    if (nodes.length > 0) {
+        node = nodes[0]
     }
+    if (nodes.length > 1) {
+        parentNode = nodes[1]
+    }
+    return {id: node.id, label: node.label, parentId: parentNode.id};
+});
+
+const postList = [
+    {"id": 32, "label": "中队长"},
+    {"id": 25, "label": "党委书记"},
+    {"id": 26, "label": "党委副书记"},
+    {"id": 38, "label": "兼职驾驶员"},
+    {"id": 28, "label": "副中队长"},
+    {"id": 46, "label": "副大队长"},
+    {"id": 24, "label": "副支队长"},
+    {"id": 50, "label": "副队长"},
+    {"id": 36, "label": "司机班长"},
+    {"id": 40, "label": "大队长"},
+    {"id": 42, "label": "安全参谋"},
+    {"id": 49, "label": "安全员"},
+    {"id": 31, "label": "战勤员"},
+    {"id": 35, "label": "战勤班长"},
+    {"id": 30, "label": "战斗员"},
+    {"id": 37, "label": "战斗班长"},
+    {"id": 43, "label": "战训参谋"},
+    {"id": 34, "label": "技术员"},
+    {"id": 33, "label": "指导员"},
+    {"id": 23, "label": "支队长"},
+    {"id": 41, "label": "教导员"},
+    {"id": 22, "label": "教授"},
+    {"id": 27, "label": "文书"},
+    {"id": 39, "label": "汽车驾驶员"},
+    {"id": 45, "label": "消防战斗员"},
+    {"id": 48, "label": "炊事员"},
+    {"id": 44, "label": "综合管理"},
+    {"id": 47, "label": "综合管理员"},
+    {"id": 29, "label": "驾驶员"}
+];
+
+Mock.mock('/post/list', 'post', options => {
+    return {
+        "postList": postList
+    }
+});
+
+Mock.mock('/post/one', 'post', options => {
+    let body = JSON.parse(options.body);
+    let nodes = getNodesInTree(body.id, JSON.parse(JSON.stringify(postList)));
+    let parentNode = {};
+    let node = {};
+    if (nodes.length > 0) {
+        node = nodes[0]
+    }
+    if (nodes.length > 1) {
+        parentNode = nodes[1]
+    }
+    return {id: node.id, label: node.label, parentId: parentNode.id};
 });
 
 Mock.mock('/role/table', 'post', options => {

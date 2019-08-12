@@ -141,9 +141,9 @@
                             },
                             on: {
                                 click: function () {
+                                    self.fetchTypeDataOne(data.id);
                                     self.formDialogVisible = true;
                                     self.formDialogStatus = "update";
-                                    self.fetchTypeDataOne(data.id);
                                 }
                             }
                         }, "编辑"),
@@ -213,7 +213,6 @@
                     } else {
                         this.form.parentId = response.data.parentId;
                     }
-                    console.log('this.form.parentId', this.form.parentId)
                 })
             },
         }

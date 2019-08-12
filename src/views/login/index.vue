@@ -99,6 +99,7 @@
         },
         methods: {
             showPwd() {
+                throw(123);
                 this.pwdType = '';
             },
             hidePwd() {

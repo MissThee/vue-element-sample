@@ -3,7 +3,7 @@ import request from 'src/utils/request'
 
 export function fetchPostList() {
   return request({
-    url: '/post/postList',
+    url: '/post/list',
   })
 }
 
@@ -25,5 +25,11 @@ export function deletePost(id) {
   return request({
     url: '/post/delete',
     data: {'id': id}
+  })
+}
+export function fetchPostOne(id) {
+  return request({
+    url: '/post/one',
+    data: {id}
   })
 }

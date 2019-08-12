@@ -45,7 +45,7 @@
         position: relative;
         width: 100%;
         height: 100%;
-        background-color: #304156;
+        background-color: #545c64;
 
         .scroll-wrapper {
             position: absolute;
