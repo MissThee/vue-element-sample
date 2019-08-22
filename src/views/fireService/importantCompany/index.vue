@@ -12,7 +12,7 @@
                         </el-button>
                     </div>
                 </el-row>
-                <el-table :key="Math.random()" :data="importantCompanyTableData" @row-click="handleRowClick" :height="clientHeight-32" stripe :default-sort="{prop: 'name', order: 'ascending'}" border>
+                <el-table :key="'用Math.random()渲染会频繁触发使自适应高度变慢'" :data="importantCompanyTableData" @row-click="handleRowClick" :height="clientHeight-32" stripe :default-sort="{prop: 'name', order: 'ascending'}" border>
                     <el-table-column :width="50" key="index" type="index" label="序号"></el-table-column>
                     <el-table-column :min-width="140" key="importantCompany" prop="importantCompany" label="重点单位" sortable></el-table-column>
                     <el-table-column :width="140" key="area" v-if="!showMapSpace" prop="area" label="区域" sortable></el-table-column>
@@ -173,7 +173,7 @@
                 },
                 keyWords: {name: ''},
                 pageNumber: 1,
-                pageSize: 50,
+                pageSize: 100,
                 totalRow: 0,
                 typeColors: []
             }
@@ -186,6 +186,9 @@
             rightSpan() {
                 return 24 - this.leftSpan
             }
+        },
+        activated(){
+            this.fixTableHeight();
         },
         methods: {
             addMarkers() {
@@ -548,10 +551,10 @@
             },
             fixTableHeight() {
                 let heightFix = 120;
-                this.clientHeight = `${document.documentElement.clientHeight}` - heightFix;
+                this.clientHeight = document.documentElement.clientHeight - heightFix;
                 const that = this;
                 window.onresize = function temp() {
-                    that.clientHeight = `${document.documentElement.clientHeight}` - heightFix;
+                    that.clientHeight = document.documentElement.clientHeight - heightFix;
                 };
             },
         }
@@ -563,30 +566,9 @@
         height: 100%;
     }
 
-    .animate {
-        transition: width .5s ease
-    }
 
     .form-mini div {
         margin-bottom: 5px;
     }
 
-    /*切换效果fade-xxx*/
-    .fade-enter {
-        opacity: 0;
-        transform: translateX(10px);
-    }
-
-    .fade-enter-active {
-        transition: all .2s;
-    }
-
-    .fade-leave-active {
-        transition: all .2s;
-    }
-
-    .fade-leave-active {
-        opacity: 0;
-        transform: translateX(10px);
-    }
 </style>

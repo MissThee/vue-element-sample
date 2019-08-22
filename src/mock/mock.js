@@ -17,7 +17,7 @@ Mock.mock('/login/login', 'post',
 Mock.mock('/index/getUserInfo', 'post',
     {
         "user": {
-            "pages": [101, 102, 103, 104, 201, 202],
+            "pages": [101, 102, 103, 104, 201, 202, 203],
             "roles": [1, 2, 3, 8, 10],
             "companyName": "测试单位",
             "name": "管理员",

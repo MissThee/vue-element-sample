@@ -20,7 +20,7 @@
                         @setCurrentSelectedId="handleSelectType"
                         @refreshNode="fetchTypeDataList"></tree-list>
             </div>
-            <div v-show="!editingType" :style="{position:'absolute',left: leftWidth+'px',right:0,borderLeft: '1px solid skyblue'}">
+            <div v-show="!editingType" :style="{position:'absolute',left: leftWidth+'px',right:0,top:'30px',bottom:0,borderLeft: '1px solid skyblue'}">
                 <el-row class="grid-tool-bar">
                     <el-button :icon="showSearch?'el-icon-arrow-down':'el-icon-arrow-up'" size="mini" type="primary"
                                @click="handleSwitchSearch()" plain>{{showSearch?'取消查找':'查找'}}
@@ -33,8 +33,9 @@
                     <el-button size="mini" type="primary" @click="loadTable()">查找</el-button>
                 </el-row>
                 <el-table :v-loading="listLoading" :data="dangerousChemicalsData"
-                          :height="clientHeight-searchBarHeight-32" stripe
-                          :default-sort="{prop: 'loginId', order: 'ascending'}" border style="width: 100%;height:100%">
+                          style="top:30px;position:absolute"
+                          stripe
+                          :default-sort="{prop: 'loginId', order: 'ascending'}" border >
                     <el-table-column type="index" label="序号" width="50"></el-table-column>
                     <el-table-column prop="typeName" align="center" label="类型" min-width="120" sortable></el-table-column>
                     <el-table-column prop="id" align="center" label="编号" min-width="80" sortable></el-table-column>
@@ -226,7 +227,7 @@
     import {Notification} from 'element-ui'
 
     export default {
-        name: "dangerousChemicals",
+        name: "dangerousChemicalsTest",
         components: {
             FileUploader,
             TreeList,
@@ -289,7 +290,7 @@
         mounted() {
             this.fetchTypeDataList()
             this.loadTable();
-           this.fixTableHeight();
+            this.fixTableHeight();
         },
         activated(){
             this.fixTableHeight();

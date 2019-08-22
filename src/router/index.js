@@ -77,6 +77,16 @@ export const asyncRouterMap = [
           page: 202
         }
       },
+      {
+        path: 'dangerousChemicalsTest/index',
+        component: _import('fireService/dangerousChemicalsTest/index'),
+        name: 'dangerousChemicalsTest',
+        meta: {
+          title: 'dangerousChemicalsTest',
+          icon: applicationIcon,
+          page: 203
+        }
+      },
     ]
   },
   {
