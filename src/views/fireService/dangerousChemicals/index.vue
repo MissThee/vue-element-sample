@@ -1,5 +1,5 @@
 <template>
-    <div class="animate" style="overflow: hidden;height: 100%;">
+    <div class="animate" ref="mainDiv" style="overflow: hidden;height: 100%;">
         <el-button v-show="!editingType" :icon="showLeftBar?'el-icon-arrow-left':'el-icon-arrow-right'"
                    :style="{float:'right',marginRight:'-5px',fontWeight: 'bold',width: '15px' ,paddingLeft: '5px',position:'absolute',zIndex:'1000',left:showLeftBar?(initLeftWidth-10+'px'):'-7px',top :clientHeight/2+'px' }"
                    size="mini" type="primary" @click="handleSwitchType()" plain></el-button>
@@ -21,19 +21,21 @@
                         @refreshNode="fetchTypeDataList"></tree-list>
             </div>
             <div v-show="!editingType" :style="{position:'absolute',left: leftWidth+'px',right:0,borderLeft: '1px solid skyblue'}">
-                <el-row class="grid-tool-bar">
-                    <el-button :icon="showSearch?'el-icon-arrow-down':'el-icon-arrow-up'" size="mini" type="primary"
-                               @click="handleSwitchSearch()" plain>{{showSearch?'取消查找':'查找'}}
-                    </el-button>
-                    <el-button size="mini" type="primary" @click="handleCreate()">添加</el-button>
-                </el-row>
-                <el-row v-if="showSearch" class="grid-tool-bar">
-                    <el-input style=" width: 300px;margin:0px" placeholder="名称/编号" size="mini"
-                              v-model="keyWords.nameOrId"></el-input>
-                    <el-button size="mini" type="primary" @click="loadTable()">查找</el-button>
-                </el-row>
+                <div ref="searchBar" style="overflow: hidden">
+                    <div class="grid-tool-bar">
+                        <el-button :icon="showSearch?'el-icon-arrow-down':'el-icon-arrow-up'" size="mini" type="primary"
+                                   @click="handleSwitchSearch()" plain>{{showSearch?'取消查找':'查找'}}
+                        </el-button>
+                        <el-button size="mini" type="primary" @click="handleCreate()">添加</el-button>
+                    </div>
+                    <div v-if="showSearch" class="grid-tool-bar">
+                        <el-input style=" width: 300px;margin:0px" placeholder="名称/编号" size="mini"
+                                  v-model="keyWords.nameOrId"></el-input>
+                        <el-button size="mini" type="primary" @click="loadTable()">查找</el-button>
+                    </div>
+                </div>
                 <el-table :v-loading="listLoading" :data="dangerousChemicalsData"
-                          :height="clientHeight-searchBarHeight-32" stripe
+                          :height="clientHeight-searchBarHeight-pageBarHeight" stripe
                           :default-sort="{prop: 'loginId', order: 'ascending'}" border style="width: 100%;height:100%">
                     <el-table-column type="index" label="序号" width="50"></el-table-column>
                     <el-table-column prop="typeName" align="center" label="类型" min-width="120" sortable></el-table-column>
@@ -125,14 +127,15 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination
-                        @current-change="handleCurrentChange"
-                        :current-page="pageNumber"
-                        :page-size="pageSize"
-                        layout=" prev, pager, next, jumper"
-                        :total="totalRow"
-                >
-                </el-pagination>
+                <div ref="pageBar" style="overflow: hidden">
+                    <el-pagination
+                            @current-change="handleCurrentChange"
+                            :current-page="pageNumber"
+                            :page-size="pageSize"
+                            layout=" prev, pager, next, jumper"
+                            :total="totalRow">
+                    </el-pagination>
+                </div>
             </div>
         </div>
         <el-dialog :title="dialogTitle[formDialogStatus]" :visible.sync="formDialogVisible" append-to-body
@@ -253,7 +256,8 @@
                     name: [{required: true, message: '名称不能为空', trigger: 'blur'}]
                 },
                 showSearch: false,
-                searchBarHeight: 30,
+                searchBarHeight: 0,
+                pageBarHeight: 0,
                 editingType: false,
                 downloadStatusOptions: [{
                     value: 1,
@@ -286,12 +290,33 @@
                 currentUserId: 'id'
             }),
         },
+        watch: {
+            showSearch(val) {
+                if (!val) {
+                    this.keyWords = {
+                        nameOrId: "",
+                        basicAttributes: "",
+                        shape: "",
+                        color: "",
+                        smell: ""
+                    };
+                    this.loadTable();
+                }
+                this.$nextTick(() => {
+                    this.searchBarHeight = this.$refs.searchBar.clientHeight;
+                })
+            }
+        },
         mounted() {
             this.fetchTypeDataList()
             this.loadTable();
-           this.fixTableHeight();
+            this.fixTableHeight();
+            this.$nextTick(() => {
+                this.searchBarHeight = this.$refs.searchBar.clientHeight;
+                this.pageBarHeight = this.$refs.pageBar.clientHeight;
+            });
         },
-        activated(){
+        activated() {
             this.fixTableHeight();
         },
         methods: {
@@ -334,8 +359,8 @@
                     })
                 }).catch(() => {
                     this.$message({
-                      type: 'error',
-                      message: '出现错误'
+                        type: 'error',
+                        message: '出现错误'
                     });
                 });
             },
@@ -420,25 +445,10 @@
                 this.showLeftBar = !this.showLeftBar;
             },
             handleSwitchSearch() {
-                if (this.showSearch) {
-                    this.showSearch = false;
-                    this.searchBarHeight = 30;
-                    this.keyWords = {
-                        nameOrId: "",
-                        basicAttributes: "",
-                        shape: "",
-                        color: "",
-                        smell: ""
-                    };
-                    this.loadTable();
-                } else {
-                    this.showSearch = true;
-                    this.searchBarHeight = 65;
-                }
+                this.showSearch = !this.showSearch;
             },
             handleEditingType() {
                 this.editingType = !this.editingType;
-
             },
             //typeSelector
             fetchTypeDataList() {
@@ -451,14 +461,14 @@
                 this.pageNumber = val;
                 this.loadTable();
             },
-            fixTableHeight(){
-                // this.$nextTick(function () {
-                this.clientHeight = document.documentElement.clientHeight - 90;
+            fixTableHeight() {
                 const that = this;
-                window.onresize = function temp() {
-                    that.clientHeight =document.documentElement.clientHeight - 90;
-                };
-                // })
+                this.$nextTick(function () {
+                    that.clientHeight = that.$refs.mainDiv.clientHeight;
+                    window.onresize = function temp() {
+                        that.clientHeight = that.$refs.mainDiv.clientHeight;
+                    };
+                })
             }
         }
     }

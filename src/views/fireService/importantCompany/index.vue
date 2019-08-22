@@ -1,8 +1,8 @@
 <template>
-    <div style="overflow: hidden;height: 100%;">
+    <div ref="mainDiv" style="overflow: hidden;height: 100%;">
         <el-row class="layout-fit">
             <el-col :span="leftSpan" class="layout-fit">
-                <el-row>
+                <div ref="searchBar" style="overflow: hidden">
                     <div :gutter="20" class="grid-tool-bar">
                         <el-button style="float:left" size="mini" type="primary" @click="handleCreate()">添加</el-button>
                         <el-input style="float:left;width: 130px;margin:0 0 0 15px" placeholder="重点单位名称查找" size="mini" v-model="keyWords.name"></el-input>
@@ -11,8 +11,8 @@
                             {{showMapSpace?'':'地图'}}
                         </el-button>
                     </div>
-                </el-row>
-                <el-table :key="'用Math.random()渲染会频繁触发使自适应高度变慢'" :data="importantCompanyTableData" @row-click="handleRowClick" :height="clientHeight-32" stripe :default-sort="{prop: 'name', order: 'ascending'}" border>
+                </div>
+                <el-table :key="'用Math.random()渲染会频繁触发使自适应高度变慢'" :data="importantCompanyTableData" @row-click="handleRowClick" :height="clientHeight-searchBarHeight-pageBarHeight" stripe :default-sort="{prop: 'name', order: 'ascending'}" border>
                     <el-table-column :width="50" key="index" type="index" label="序号"></el-table-column>
                     <el-table-column :min-width="140" key="importantCompany" prop="importantCompany" label="重点单位" sortable></el-table-column>
                     <el-table-column :width="140" key="area" v-if="!showMapSpace" prop="area" label="区域" sortable></el-table-column>
@@ -31,14 +31,15 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination
-                        @current-change="handleCurrentChange"
-                        :current-page="pageNumber"
-                        :page-size="pageSize"
-                        layout=" prev, pager, next, jumper"
-                        :total="totalRow"
-                >
-                </el-pagination>
+                <div ref="pageBar" style="overflow: hidden">
+                    <el-pagination
+                            @current-change="handleCurrentChange"
+                            :current-page="pageNumber"
+                            :page-size="pageSize"
+                            layout=" prev, pager, next, jumper"
+                            :total="totalRow">
+                    </el-pagination>
+                </div>
             </el-col>
             <el-col v-show="showMapSpace" :span="rightSpan" class="layout-fit">
                 <div v-if="ifMap" id="container" class="layout-fit"></div>
@@ -125,6 +126,8 @@
                 ],
                 map: undefined,
                 clientHeight: 0,
+                searchBarHeight: 0,
+                pageBarHeight: 0,
                 points: [
                     // {"lng": 116.092, "lat": 38.715},
                     // {"lng": 116.112, "lat": 38.705},
@@ -181,35 +184,39 @@
         mounted() {
             this.loadTable();
             this.fixTableHeight();
+            this.$nextTick(() => {
+                this.searchBarHeight = this.$refs.searchBar.clientHeight;
+                this.pageBarHeight = this.$refs.pageBar.clientHeight;
+            });
         },
         computed: {
             rightSpan() {
                 return 24 - this.leftSpan
             }
         },
-        activated(){
+        activated() {
             this.fixTableHeight();
         },
         methods: {
-            addMarkers() {
-                let points = this.importantCompanyTableData;
-                for (let i = 0; i < points.length; i++) {
-                    let fixedPoint = this.transPoint(points[i].lng, points[i].lat, points[i].coordinateType)
-                    let marker = new BMap.Marker(new BMap.Point(fixedPoint.lng, fixedPoint.lat));
-                    let label = new BMap.Label(points[i].importantCompany, {offset: new BMap.Size(20, -10)});
-                    marker.setLabel(label);
-                    let that = this;
-                    marker.addEventListener("click", function () {
-                        that.handleView(points[i].id)
-                    });
-                    this.map.addOverlay(marker);
-                }
-            },
-            addMarker(lng, lat) {
-                let fixedPoint = this.transPoint(lng, lat)
-                let marker = new BMap.Marker(new BMap.Point(fixedPoint.lng, fixedPoint.lat));
-                this.map.addOverlay(marker);
-            },
+            // addMarkers() {
+            //     let points = this.importantCompanyTableData;
+            //     for (let i = 0; i < points.length; i++) {
+            //         let fixedPoint = this.transPoint(points[i].lng, points[i].lat, points[i].coordinateType)
+            //         let marker = new BMap.Marker(new BMap.Point(fixedPoint.lng, fixedPoint.lat));
+            //         let label = new BMap.Label(points[i].importantCompany, {offset: new BMap.Size(20, -10)});
+            //         marker.setLabel(label);
+            //         let that = this;
+            //         marker.addEventListener("click", function () {
+            //             that.handleView(points[i].id)
+            //         });
+            //         this.map.addOverlay(marker);
+            //     }
+            // },
+            // addMarker(lng, lat) {
+            //     let fixedPoint = this.transPoint(lng, lat);
+            //     let marker = new BMap.Marker(new BMap.Point(fixedPoint.lng, fixedPoint.lat));
+            //     this.map.addOverlay(marker);
+            // },
             addColorMakers() {
                 let page = this;
 
@@ -546,16 +553,17 @@
                 }
             },
             handleCurrentChange(val) {
-                this.pageNumber = val
+                this.pageNumber = val;
                 this.loadTable();
             },
             fixTableHeight() {
-                let heightFix = 120;
-                this.clientHeight = document.documentElement.clientHeight - heightFix;
                 const that = this;
-                window.onresize = function temp() {
-                    that.clientHeight = document.documentElement.clientHeight - heightFix;
-                };
+                this.$nextTick(function () {
+                    that.clientHeight = that.$refs.mainDiv.clientHeight;
+                    window.onresize = function temp() {
+                        that.clientHeight = that.$refs.mainDiv.clientHeight;
+                    };
+                })
             },
         }
     }
