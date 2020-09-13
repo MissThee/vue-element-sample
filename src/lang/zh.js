@@ -47,7 +47,7 @@ export default {
     systemOption: '系统管理',
     userOption: '用户管理',
     roleOption: '角色管理',
-    importantCompany: '重点单位',
+    importantCompany: '重点单位(地图)',
     companyOption: '部门管理',
     business: '信息处理',
     postOption: '岗位管理',

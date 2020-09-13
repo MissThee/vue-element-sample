@@ -32,7 +32,8 @@ Mock.mock('/index/getUserInfo', 'post',
 Mock.mock('/login/info', 'post',
     {
         "imageTable": ["1", "2", "3", "4"],
-        "newsTable": [{"title": "title1", "content": "content123123"}, {"title": "title2", "content": "content234234"}]
+        "newsTable": [{"title": "测试通知1", "content": "通知内容。。。。"},
+            {"title": "测试通知2", "content": "通知内容！！！！"}]
     }
 );
 

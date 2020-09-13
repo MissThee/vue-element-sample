@@ -7,8 +7,9 @@
                         <el-button style="float:left" size="mini" type="primary" @click="handleCreate()">添加</el-button>
                         <el-input style="float:left;width: 130px;margin:0 0 0 15px" placeholder="重点单位名称查找" size="mini" v-model="keyWords.name"></el-input>
                         <el-button style="float:left" size="mini" type="primary" @click="loadTable()">查找</el-button>
-                        <el-button :icon="showMapSpace?'el-icon-arrow-right':'el-icon-arrow-left'" :style="{float:'right',marginRight:'-5px',fontWeight: 'bold',width:showMapSpace?'15px':'',paddingLeft:showMapSpace?'5px':''}" size="mini" type="primary" @click="handleSwitchMap()" plain>
-                            {{showMapSpace?'':'地图'}}
+<!--                        ,width:showMapSpace?'15px':'',paddingLeft:showMapSpace?'5px':''-->
+                        <el-button :icon="showMapSpace?'el-icon-arrow-right':'el-icon-arrow-left'" :style="{float:'right',marginRight:'-5px',fontWeight: 'bold'}" size="mini" type="danger" @click="handleSwitchMap()" plain>
+                            {{showMapSpace?'收起地图':'展开地图'}}
                         </el-button>
                     </div>
                 </div>
@@ -187,6 +188,7 @@
             this.$nextTick(() => {
                 this.searchBarHeight = this.$refs.searchBar.clientHeight;
                 this.pageBarHeight = this.$refs.pageBar.clientHeight;
+                this.handleSwitchMap();
             });
         },
         computed: {
@@ -447,7 +449,6 @@
                 } else {
                     this.showMapSpace = true;
                     this.leftSpan = 9;
-
                 }
                 if (!this.ifMap) {
                     this.ifMap = true;

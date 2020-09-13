@@ -12,6 +12,7 @@
                 <section>
                     <el-carousel trigger="click" class="login-section">
                         <el-carousel-item v-for="item in imageData" :key="item.id">
+                            <div style="text-align: center;font-size: 3em;color: gray;height: 300px;line-height: 300px">示例图片</div>
                             <img :src="item.path" height="350" alt=""/>
                         </el-carousel-item>
                     </el-carousel>
@@ -78,8 +79,8 @@
             };
             return {
                 loginForm: {
-                    loginId: '',
-                    password: ''
+                    loginId: 'test',
+                    password: 'password'
                 },
                 loginRules: {
                     loginId: [{required: true, trigger: 'blur', validator: validateLoginId}],
@@ -95,7 +96,9 @@
         mounted() {
             document.onmouseup = this.hidePwd;//全局监听mouseup事件
             this.fetchInfo();
-            this.loginForm.loginId = this.getCookie('loginId');
+            if (this.loginForm.loginId === '') {
+                this.loginForm.loginId = this.getCookie('loginId');
+            }
         },
         methods: {
             showPwd() {

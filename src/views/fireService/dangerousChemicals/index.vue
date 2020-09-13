@@ -8,7 +8,7 @@
                 <div slot="header" style="padding:10px">
                     <span>类别</span>
                     <el-tooltip class="item" effect="dark" content="编辑类型" placement="top-start">
-                        <el-button style="float: right; padding: 3px" @click="handleEditingType()" icon="el-icon-edit" type="text" plain>
+                        <el-button style="float: right; padding: 3px" @click="handleEditingType()" icon="el-icon-edit" type="warning" plain>
                             {{editingType?'结束编辑':'编辑类别'}}
                         </el-button>
                     </el-tooltip>

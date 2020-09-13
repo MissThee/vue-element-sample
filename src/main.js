@@ -8,7 +8,7 @@ import store from './store'
 import * as filters from './filters' // 全局filter
 import './router/routFilter' // 权限
 
-require('src/mock/mock');//请求使用mockjs模拟
+require('src/mock/mock'); // 请求使用mockjs模拟
 
 Vue.use(Element, {
     i18n: (key, value) => i18n.t(key, value)
